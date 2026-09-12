@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+
+  /* Light theme (default) */
+  --c-950: #eef1fb; /* page background */
+  --c-900: #f4f6fc;
+  --c-850: #ffffff; /* card background */
+  --c-800: #f3f4fa; /* hover / subtle fill */
+  --c-700: #e4e7f2; /* borders */
+  --c-600: #cfd3e8; /* stronger borders */
+  --c-500: #6b7280; /* muted text */
+  --c-ink: #14151f; /* primary text */
+
+  --c-accent-400: #7c8cff;
+  --c-accent-500: #5b6bff;
+  --c-accent-600: #4451e0;
+
+  --c-success: #16a34a;
+  --c-warning: #d97706;
+  --c-danger: #dc2626;
+
+  --c-stat-blue: #6366f1;
+  --c-stat-yellow: #f5b544;
+  --c-stat-red: #f0645f;
+  --c-stat-green: #22b573;
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  --c-950: #0a0a0f;
+  --c-900: #0f0f17;
+  --c-850: #14141f;
+  --c-800: #1a1a28;
+  --c-700: #242436;
+  --c-600: #33334a;
+  --c-500: #8b8ba3;
+  --c-ink: #e8e8f0;
+
+  --c-accent-400: #7c8cff;
+  --c-accent-500: #5b6bff;
+  --c-accent-600: #4451e0;
+
+  --c-success: #2fd67f;
+  --c-warning: #ffb545;
+  --c-danger: #ff5b6a;
+
+  --c-stat-blue: #5b6bff;
+  --c-stat-yellow: #d99a3a;
+  --c-stat-red: #d9605c;
+  --c-stat-green: #2fa869;
+}
+
+html,
+body {
+  background-color: var(--c-950);
+  color: var(--c-ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background-color: var(--c-accent-500);
+  color: white;
+}
+
+/* In @layer components so Tailwind utilities (e.g. pl-9 on a search input)
+   win the cascade instead of being silently overridden by these shorthand
+   properties — plain CSS after @tailwind utilities would otherwise land
+   later in the stylesheet and beat same-specificity utility classes. */
+@layer components {
+  .card {
+    background-color: var(--c-850);
+    border: 1px solid var(--c-700);
+    border-radius: 0.875rem;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  }
+
+  .btn-primary {
+    background-color: var(--c-accent-500);
+    color: white;
+    font-weight: 600;
+    border-radius: 0.625rem;
+    padding: 0.625rem 1.25rem;
+    transition: background-color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--c-accent-600);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    color: var(--c-ink);
+    font-weight: 600;
+    border-radius: 0.625rem;
+    padding: 0.625rem 1.25rem;
+    border: 1px solid var(--c-700);
+    transition: border-color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--c-accent-500);
+  }
+
+  .input-field {
+    background-color: var(--c-900);
+    border: 1px solid var(--c-700);
+    border-radius: 0.625rem;
+    padding: 0.625rem 0.875rem;
+    color: var(--c-ink);
+    width: 100%;
+  }
+
+  .input-field::placeholder {
+    color: var(--c-500);
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: var(--c-accent-500);
+    box-shadow: 0 0 0 3px rgba(91, 107, 255, 0.15);
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.125rem 0.625rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .pill-tab {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--c-700);
+    color: var(--c-500);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .pill-tab[data-active="true"] {
+    background-color: var(--c-accent-500);
+    border-color: var(--c-accent-500);
+    color: white;
+  }
+
+  .pill-tab:not([data-active="true"]):hover {
+    border-color: var(--c-accent-500);
+    color: var(--c-ink);
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 2.75rem;
+    height: 1.5rem;
+    border-radius: 999px;
+    background-color: var(--c-700);
+    transition: background-color 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch[data-on="true"] {
+    background-color: var(--c-success);
+  }
+
+  .toggle-switch .knob {
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-color: white;
+    border-radius: 999px;
+    transition: transform 0.15s ease;
+  }
+
+  .toggle-switch[data-on="true"] .knob {
+    transform: translateX(1.25rem);
+  }
+}

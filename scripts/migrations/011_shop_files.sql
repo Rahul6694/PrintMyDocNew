@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS shop_files (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  shop_id BIGINT UNSIGNED NOT NULL,
+  category VARCHAR(100) NOT NULL DEFAULT 'General',
+  file_name VARCHAR(255) NOT NULL,
+  file_path VARCHAR(500) NOT NULL,
+  file_size INT UNSIGNED NOT NULL DEFAULT 0,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT fk_shop_files_shop FOREIGN KEY (shop_id) REFERENCES shops(id) ON DELETE CASCADE,
+  INDEX idx_shop_files_category (shop_id, category)
+) ENGINE=InnoDB;

@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS shop_credits (
+  shop_id BIGINT UNSIGNED PRIMARY KEY,
+  included_in_plan INT UNSIGNED NOT NULL DEFAULT 50,
+  remaining INT UNSIGNED NOT NULL DEFAULT 50,
+  used INT UNSIGNED NOT NULL DEFAULT 0,
+  purchased INT UNSIGNED NOT NULL DEFAULT 0,
+  period_ends_at DATETIME(3) NULL,
+  updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  CONSTRAINT fk_shop_credits_shop FOREIGN KEY (shop_id) REFERENCES shops(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS credit_transactions (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  shop_id BIGINT UNSIGNED NOT NULL,
+  type ENUM('included','purchased','consumed','expired') NOT NULL,
+  amount INT NOT NULL,
+  razorpay_order_id VARCHAR(64) NULL,
+  razorpay_payment_id VARCHAR(64) NULL,
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT fk_credit_tx_shop FOREIGN KEY (shop_id) REFERENCES shops(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS contact_enquiries (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  phone VARCHAR(20) NULL,
+  email VARCHAR(190) NULL,
+  message TEXT NOT NULL,
+  status ENUM('new','read','resolved') NOT NULL DEFAULT 'new',
+  created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+) ENGINE=InnoDB;
