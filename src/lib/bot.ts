@@ -1,5 +1,6 @@
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "./db";
+import { getBaseUrl } from "./url";
 
 export type BotSettings = {
   enabled: number;
@@ -42,7 +43,7 @@ export async function computeBotReply(
 
   const [[shopRow]] = await pool.query<RowDataPacket[]>("SELECT name, slug FROM shops WHERE id = ?", [shopId]);
   const shopName = shopRow?.name || "our shop";
-  const link = shopRow?.slug ? `${process.env.NEXT_PUBLIC_APP_URL}/s/${shopRow.slug}` : "";
+  const link = shopRow?.slug ? `${getBaseUrl()}/s/${shopRow.slug}` : "";
 
   if (input.isDocument) {
     return interpolate(settings.document_received_message, { shop: shopName, link, file: "your document" });
