@@ -85,7 +85,7 @@ export default function BillingPage() {
         modal: {
           ondismiss: () => setSubscribing(null),
         },
-        theme: { color: "#5b6bff" },
+        theme: { color: "#f97316" },
       });
       rzp.open();
     } catch {

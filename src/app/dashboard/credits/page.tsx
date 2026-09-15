@@ -65,7 +65,7 @@ export default function CreditsPage() {
         setProcessing(false);
       },
       modal: { ondismiss: () => setProcessing(false) },
-      theme: { color: "#5b6bff" },
+      theme: { color: "#f97316" },
     });
     rzp.open();
   }

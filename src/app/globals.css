@@ -15,15 +15,15 @@
   --c-500: #6b7280; /* muted text */
   --c-ink: #14151f; /* primary text */
 
-  --c-accent-400: #7c8cff;
-  --c-accent-500: #5b6bff;
-  --c-accent-600: #4451e0;
+  --c-accent-400: #fb923c;
+  --c-accent-500: #f97316;
+  --c-accent-600: #ea580c;
 
   --c-success: #16a34a;
   --c-warning: #d97706;
   --c-danger: #dc2626;
 
-  --c-stat-blue: #6366f1;
+  --c-stat-blue: #3b82f6;
   --c-stat-yellow: #f5b544;
   --c-stat-red: #f0645f;
   --c-stat-green: #22b573;
@@ -41,15 +41,15 @@
   --c-500: #8b8ba3;
   --c-ink: #e8e8f0;
 
-  --c-accent-400: #7c8cff;
-  --c-accent-500: #5b6bff;
-  --c-accent-600: #4451e0;
+  --c-accent-400: #fb923c;
+  --c-accent-500: #f97316;
+  --c-accent-600: #ea580c;
 
   --c-success: #2fd67f;
   --c-warning: #ffb545;
   --c-danger: #ff5b6a;
 
-  --c-stat-blue: #5b6bff;
+  --c-stat-blue: #4a90f7;
   --c-stat-yellow: #d99a3a;
   --c-stat-red: #d9605c;
   --c-stat-green: #2fa869;
@@ -132,7 +132,7 @@ body {
   .input-field:focus {
     outline: none;
     border-color: var(--c-accent-500);
-    box-shadow: 0 0 0 3px rgba(91, 107, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
   }
 
   .badge {

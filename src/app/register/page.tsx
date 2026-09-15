@@ -109,7 +109,7 @@ function RegisterForm() {
           router.refresh();
         },
         modal: { ondismiss: () => setPayingPlan(null) },
-        theme: { color: "#5b6bff" },
+        theme: { color: "#f97316" },
       });
       rzp.open();
     } catch {

@@ -146,7 +146,7 @@ export default function OrderForm({
         modal: {
           ondismiss: () => setStatus("idle"),
         },
-        theme: { color: "#5b6bff" },
+        theme: { color: "#f97316" },
       });
       rzp.open();
     } catch {
