@@ -6,6 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { Printer, User, Store, Phone, Mail, Lock, Gift, Eye, EyeOff, CheckCircle2, Check } from "lucide-react";
 import { PLANS, type PlanId } from "@/lib/plans";
+import AuthHeader from "@/components/auth/AuthHeader";
 
 declare global {
   interface Window {
@@ -118,8 +119,10 @@ function RegisterForm() {
   }
 
   return (
-    <main className="min-h-screen bg-base-950 px-6 py-16">
+    <div className="min-h-screen bg-base-950">
+      <AuthHeader />
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+      <main className="px-6 py-16">
       <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
         <div>
           <span className="text-xs font-bold uppercase tracking-wide text-success">
@@ -323,7 +326,8 @@ function RegisterForm() {
           </div>
         )}
       </div>
-    </main>
+      </main>
+    </div>
   );
 }
 

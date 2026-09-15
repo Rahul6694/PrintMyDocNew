@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Printer, Eye, EyeOff } from "lucide-react";
+import AuthHeader from "@/components/auth/AuthHeader";
 
 const STEPS = ["Receive", "Configure", "Print"];
 
@@ -40,7 +41,9 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-base-950 flex items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-base-950">
+      <AuthHeader />
+      <main className="flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl grid lg:grid-cols-2 bg-base-850">
         <div className="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-accent-600 to-accent-400 text-white relative overflow-hidden">
           <div className="absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
@@ -131,6 +134,7 @@ export default function LoginPage() {
           <p className="text-center text-xs text-base-500 mt-2">Encrypted in transit · Secured by Razorpay</p>
         </div>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }

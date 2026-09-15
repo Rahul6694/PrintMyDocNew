@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import AuthHeader from "@/components/auth/AuthHeader";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -30,7 +31,9 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6">
+    <div className="min-h-screen">
+      <AuthHeader />
+      <main className="flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <p className="text-lg font-bold tracking-tight">
@@ -53,6 +56,7 @@ export default function AdminLoginPage() {
           </button>
         </form>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }
