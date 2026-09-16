@@ -1,32 +1,76 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CheckCircle2, Circle, RotateCw, KeyRound, Cpu, Activity, FlaskConical, AlertTriangle } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  CheckCircle2,
+  Circle,
+  RotateCw,
+  KeyRound,
+  Cpu,
+  Activity,
+  FlaskConical,
+  AlertTriangle,
+  Monitor,
+  Download,
+  ChevronDown,
+  ShieldCheck,
+} from "lucide-react";
 
 type Agent = { id: number; status: string; agent_version: string | null; last_ping_at: string | null } | null;
 type Printer = { id: number; name: string; is_default: number; paper_tray: string; status: string };
+type Build = { platform: string; arch: string; label: string; filename: string; url: string; sha256: string; size: number };
+type Manifest = { version: string; releasedAt: string; builds: Build[] };
 
 const PAPER_TRAY_OPTIONS = ["auto", "tray-1", "tray-2", "manual-feed"];
+const PLATFORM_LABELS: Record<string, string> = { windows: "Windows", macos: "macOS", linux: "Linux" };
 
-function detectOs(): string {
-  if (typeof navigator === "undefined") return "your machine";
+function formatSize(bytes: number): string {
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+// Best-effort client-side OS/arch detection so we can pre-select the right download.
+// Browsers deliberately obscure exact OS version and (on non-Chromium/UA-CH browsers)
+// CPU architecture, so this is a starting guess — the "download for another platform"
+// list below lets people override it, same as the underlying UA-CH spec recommends.
+async function detectPlatform(): Promise<{ platform: string; arch: string | null }> {
+  if (typeof navigator === "undefined") return { platform: "unknown", arch: null };
   const ua = navigator.userAgent;
-  if (ua.includes("Mac")) return "macOS";
-  if (ua.includes("Win")) return "Windows";
-  if (ua.includes("Linux")) return "Linux";
-  return "your machine";
+
+  let platform = "unknown";
+  if (/Win/i.test(ua)) platform = "windows";
+  else if (/Mac/i.test(ua)) platform = "macos";
+  else if (/Linux/i.test(ua) && !/Android/i.test(ua)) platform = "linux";
+
+  const uaData = (navigator as unknown as { userAgentData?: { getHighEntropyValues: (hints: string[]) => Promise<{ architecture?: string; bitness?: string }> } }).userAgentData;
+  if (uaData) {
+    try {
+      const hints = await uaData.getHighEntropyValues(["architecture", "bitness"]);
+      if (hints.architecture === "arm") return { platform, arch: "arm64" };
+      if (hints.architecture === "x86") return { platform, arch: "x64" };
+    } catch {
+      /* Chromium but hints denied — fall through to UA sniffing */
+    }
+  }
+
+  if (/arm64|aarch64/i.test(ua)) return { platform, arch: "arm64" };
+  if (/Win64|WOW64|x64|x86_64/i.test(ua)) return { platform, arch: "x64" };
+  if (platform === "macos") return { platform, arch: "x64" }; // Apple Silicon Macs misreport "Intel" in the UA string
+  if (platform === "linux") return { platform, arch: "x64" };
+  return { platform, arch: null };
 }
 
 export default function PrintersTab() {
   const [agent, setAgent] = useState<Agent>(null);
   const [printers, setPrinters] = useState<Printer[]>([]);
-  const [loading, setLoading] = useState(true);
   const [credentials, setCredentials] = useState<{ shopId: number; secret: string } | null>(null);
   const [generating, setGenerating] = useState(false);
   const [settingDefault, setSettingDefault] = useState(false);
   const [testing, setTesting] = useState(false);
   const [testMessage, setTestMessage] = useState("");
-  const [os, setOs] = useState("your machine");
+  const [detected, setDetected] = useState<{ platform: string; arch: string | null }>({ platform: "unknown", arch: null });
+  const [manifest, setManifest] = useState<Manifest | null>(null);
+  const [showOtherPlatforms, setShowOtherPlatforms] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
   async function load() {
     const res = await fetch("/api/business/printers");
@@ -35,12 +79,15 @@ export default function PrintersTab() {
       setAgent(data.agent);
       setPrinters(data.printers);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
-    setOs(detectOs());
+    detectPlatform().then(setDetected);
     load();
+    fetch("/downloads/agent/manifest.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setManifest)
+      .catch(() => setManifest(null));
     const interval = setInterval(load, 10000);
     return () => clearInterval(interval);
   }, []);
@@ -88,41 +135,136 @@ export default function PrintersTab() {
 
   const isOnline = agent?.status === "online";
   const defaultPrinter = printers.find((p) => p.is_default);
+  const osLabel = PLATFORM_LABELS[detected.platform] || "your machine";
+
+  const recommendedBuild = useMemo(() => {
+    if (!manifest) return null;
+    return (
+      manifest.builds.find((b) => b.platform === detected.platform && b.arch === detected.arch) ||
+      manifest.builds.find((b) => b.platform === detected.platform) ||
+      null
+    );
+  }, [manifest, detected]);
+
+  const otherBuilds = useMemo(
+    () => (manifest ? manifest.builds.filter((b) => b !== recommendedBuild) : []),
+    [manifest, recommendedBuild]
+  );
 
   const steps = [
-    { done: !!credentials || !!agent, label: "Generate agent credentials", desc: "Create a Shop ID + Secret Key below" },
-    { done: !!agent, label: "Run the local agent", desc: `npm start inside the agent/ folder on the shop PC (${os})` },
-    { done: isOnline, label: "Agent connects & reports printers", desc: isOnline ? "Connected" : "Awaiting first heartbeat" },
+    {
+      done: downloaded || !!agent,
+      label: "Download & install the PrintMyDoc Agent",
+      desc: recommendedBuild ? `${recommendedBuild.label} · automatically matched` : `Detected ${osLabel}`,
+    },
+    {
+      done: !!credentials || !!agent,
+      label: "Paste your Shop ID & Secret Key into first-run setup",
+      desc: "Generate credentials below",
+    },
+    {
+      done: isOnline,
+      label: "Agent connects to the PrintMyDoc mesh",
+      desc: isOnline ? "Connected" : "Awaiting first heartbeat",
+    },
   ];
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="card p-6">
-        <div className="flex items-start gap-3 mb-4">
-          <span className="w-10 h-10 rounded-xl bg-accent-500 text-white flex items-center justify-center shrink-0">
-            <Cpu size={18} />
+        <div className="flex items-start gap-3 mb-5">
+          <span className="w-11 h-11 rounded-xl bg-accent-500 text-white flex items-center justify-center shrink-0">
+            <Cpu size={20} />
           </span>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold">PrintMyDoc Agent</h3>
-              <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30">Open source</span>
+              <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30">Compatible build</span>
             </div>
-            <p className="text-base-500 text-sm">The lightweight local service that links your printers to this dashboard</p>
+            <p className="text-base-500 text-sm">The lightweight desktop agent that links your printers to the platform.</p>
           </div>
           <span className={`badge shrink-0 ${isOnline ? "bg-success/10 text-success border border-success/30" : "bg-base-700 text-base-500"}`}>
             {isOnline ? "Connected" : "Not connected"}
           </span>
         </div>
 
-        <div className="bg-base-900 rounded-xl p-4 mb-4">
-          <p className="text-xs text-base-500 uppercase tracking-wide font-semibold mb-2">Setup · detected {os}</p>
-          <p className="text-sm text-base-500">
-            There&apos;s no separate installer to download — the agent is a small open-source Node.js script you run
-            directly on the print server. {os === "Windows" && "Windows also needs SumatraPDF installed for silent printing — see agent/README.md."}
-          </p>
-        </div>
+        <p className="text-xs text-base-500 uppercase tracking-wide font-semibold mb-2">
+          Download · detected {osLabel}
+          {detected.arch ? ` · ${detected.arch}` : ""}
+        </p>
 
-        <div className="bg-base-900 rounded-xl p-4 space-y-3 mb-4">
+        {manifest && recommendedBuild ? (
+          <>
+            <a
+              href={recommendedBuild.url}
+              download
+              onClick={() => setDownloaded(true)}
+              className="flex items-center gap-3 rounded-xl px-4 py-3.5 bg-accent-500 hover:bg-accent-600 text-white transition-colors"
+            >
+              <span className="w-10 h-10 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+                <Monitor size={18} />
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block font-semibold text-sm">Download PrintMyDoc Agent</span>
+                <span className="block text-xs text-white/80">
+                  v{manifest.version} · {recommendedBuild.label} · {formatSize(recommendedBuild.size)}
+                </span>
+              </span>
+              <Download size={20} className="shrink-0" />
+            </a>
+
+            <p className="text-xs text-base-500 font-mono mt-2 break-all">SHA-256: {recommendedBuild.sha256}</p>
+
+            {otherBuilds.length > 0 && (
+              <div className="mt-3">
+                <button
+                  onClick={() => setShowOtherPlatforms((v) => !v)}
+                  className="w-full flex items-center justify-between text-sm font-medium border border-base-700 rounded-xl px-4 py-3 hover:border-accent-500"
+                >
+                  Download for another platform
+                  <ChevronDown size={16} className={`transition-transform ${showOtherPlatforms ? "rotate-180" : ""}`} />
+                </button>
+                {showOtherPlatforms && (
+                  <div className="mt-2 space-y-2">
+                    {otherBuilds.map((b) => (
+                      <div key={b.filename} className="border border-base-700 rounded-lg px-4 py-2.5 flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium">{b.label}</p>
+                          <p className="text-xs text-base-500 font-mono truncate">{formatSize(b.size)} · {b.sha256.slice(0, 16)}…</p>
+                        </div>
+                        <a
+                          href={b.url}
+                          download
+                          onClick={() => setDownloaded(true)}
+                          className="text-xs font-semibold border border-base-700 rounded-lg px-3 py-1.5 hover:border-accent-500 flex items-center gap-1.5 shrink-0"
+                        >
+                          <Download size={13} /> Download
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="bg-base-900 rounded-xl p-4 mt-4 flex items-start gap-2.5">
+              <ShieldCheck size={16} className="text-base-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold">Supported production systems</p>
+                <p className="text-xs text-base-500 mt-1">
+                  The recommended download matches your browser-reported OS and CPU architecture. If the browser hides
+                  architecture, pick x64 (64-bit Intel/AMD) or arm64 manually from the list above.
+                </p>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="bg-base-900 rounded-xl p-4 text-sm text-base-500">
+            {manifest === null ? "No agent build has been published yet — run `npm run build` inside agent/." : "Loading available builds..."}
+          </div>
+        )}
+
+        <div className="bg-base-900 rounded-xl p-4 space-y-3 mt-4">
           <p className="text-xs text-base-500 uppercase tracking-wide font-semibold">Connection steps</p>
           {steps.map((s, i) => (
             <div key={i} className="flex items-start gap-3">
@@ -132,21 +274,20 @@ export default function PrintersTab() {
                 <Circle size={18} className="text-base-500 shrink-0 mt-0.5" />
               )}
               <div>
-                <p className="text-sm font-medium">{s.label}</p>
+                <p className="text-sm font-medium">
+                  {i + 1}. {s.label}
+                </p>
                 <p className="text-xs text-base-500">{s.desc}</p>
               </div>
             </div>
           ))}
-          <button
-            onClick={load}
-            className="btn-primary w-full text-sm flex items-center justify-center gap-2"
-          >
+          <button onClick={load} className="btn-primary w-full text-sm flex items-center justify-center gap-2">
             <RotateCw size={14} /> Re-check agent connection
           </button>
         </div>
 
         {agent && (
-          <p className="text-base-500 text-sm">
+          <p className="text-base-500 text-sm mt-4">
             Version {agent.agent_version || "unknown"} · Last seen{" "}
             {agent.last_ping_at ? new Date(agent.last_ping_at).toLocaleString() : "never"}
           </p>
@@ -167,7 +308,7 @@ export default function PrintersTab() {
         {printers.length === 0 ? (
           <div className="text-center py-10">
             <p className="font-semibold text-sm mb-1">No printers detected</p>
-            <p className="text-base-500 text-sm">Make sure the PrintMyDoc agent is running.</p>
+            <p className="text-base-500 text-sm">Make sure the PrintMyDoc Agent is running.</p>
           </div>
         ) : (
           <div className="space-y-2 mt-4 mb-4">
@@ -241,12 +382,12 @@ export default function PrintersTab() {
         )}
       </div>
 
-      <div className="card p-6">
+      <div id="agent-credentials" className="card p-6">
         <h3 className="font-semibold mb-1 flex items-center gap-2">
           <KeyRound size={16} /> Agent Credentials
         </h3>
         <p className="text-base-500 text-sm mb-4">
-          Generate a Shop ID + Secret Key, then paste them into the agent&apos;s <code>.env</code> file.
+          Generate a Shop ID + Secret Key, then paste them into the PrintMyDoc Agent&apos;s first-run setup prompt.
         </p>
         <button onClick={generateCredentials} disabled={generating} className="btn-primary">
           {generating ? "Generating..." : agent ? "Regenerate Credentials" : "Generate Credentials"}
@@ -254,9 +395,9 @@ export default function PrintersTab() {
 
         {credentials && (
           <div className="mt-4 bg-base-900 rounded-lg p-4 text-sm font-mono space-y-1 border border-base-700">
-            <p>SHOP_ID={credentials.shopId}</p>
-            <p>AGENT_SECRET={credentials.secret}</p>
-            <p className="text-warning text-xs font-sans mt-2">This secret is shown once. Copy it into agent/.env now.</p>
+            <p>Shop ID: {credentials.shopId}</p>
+            <p>Secret Key: {credentials.secret}</p>
+            <p className="text-warning text-xs font-sans mt-2">This secret is shown once. Paste it into the agent when prompted.</p>
           </div>
         )}
       </div>

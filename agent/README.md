@@ -9,20 +9,40 @@ A small background service you run on the same computer as your printer(s). It:
 3. Polls for orders your shop has moved to "Printing" and sends them to your default
    printer automatically.
 
-## Setup
+## For shop owners: install the packaged binary
+
+Download the build for your OS from **Business Setup → Printers** in the dashboard and
+run it. On first launch it asks for your Shop ID and Secret Key (from **Generate
+Credentials** on that same page) and saves them to `~/.printmydoc/agent-config.json` —
+you won't be asked again on later launches. No Node.js install required.
+
+Leave it running in the background (e.g. as a login item / systemd service / Task
+Scheduler task) so it's always online while your shop is open.
+
+## For development: run from source
 
 ```bash
 cd agent
 npm install
-cp .env.example .env
+npm start
 ```
 
-1. In the dashboard, go to **Business Setup → Printers → Generate Credentials**.
-2. Copy the Shop ID and Secret Key into `.env`.
-3. `npm start`
+You'll get the same first-run prompt as the packaged binary. `SERVER_URL`, `SHOP_ID`
+and `AGENT_SECRET` env vars (or a `.env` file, see `.env.example`) skip the prompt.
 
-Leave it running in the background (e.g. as a login item / systemd service / Task
-Scheduler task) so it's always online while your shop is open.
+## Building distributable binaries
+
+```bash
+cd agent
+npm install
+npm run build
+```
+
+This uses [`pkg`](https://github.com/yao-pkg/pkg) to produce standalone Windows/macOS/
+Linux binaries in `agent/dist/`, then publishes them plus a `manifest.json` (version,
+per-platform SHA-256 checksums, sizes) into `public/downloads/agent/` so the dashboard's
+Printers tab can serve real downloads. Bump `version` in `agent/package.json` before
+running this for a new release — the previous version's files are left in place.
 
 ## Platform notes
 

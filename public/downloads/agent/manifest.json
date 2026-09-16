@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "releasedAt": "2026-09-16T18:35:56.638Z",
+  "builds": [
+    {
+      "platform": "linux",
+      "arch": "arm64",
+      "label": "Linux · arm64",
+      "filename": "printmydoc-agent-1.0.0-linux-arm64",
+      "url": "/downloads/agent/1.0.0/printmydoc-agent-1.0.0-linux-arm64",
+      "sha256": "66cd4c0daa08f1f2d84e38b2a2184b373c1ce6c1bdaa861591d192a6b79b3a96",
+      "size": 48714452
+    },
+    {
+      "platform": "linux",
+      "arch": "x64",
+      "label": "Linux · x64",
+      "filename": "printmydoc-agent-1.0.0-linux-x64",
+      "url": "/downloads/agent/1.0.0/printmydoc-agent-1.0.0-linux-x64",
+      "sha256": "f83dacd4d714d1ceca58c2f2d584e111285da2484ddd2b3469d1eeb6553755dd",
+      "size": 51418028
+    },
+    {
+      "platform": "macos",
+      "arch": "arm64",
+      "label": "macOS · Apple Silicon (arm64)",
+      "filename": "printmydoc-agent-1.0.0-macos-arm64",
+      "url": "/downloads/agent/1.0.0/printmydoc-agent-1.0.0-macos-arm64",
+      "sha256": "3bd311dbffb7aa488f61379f5aeb234a86e66504483f22792f82c2d6f499abf7",
+      "size": 46065072
+    },
+    {
+      "platform": "macos",
+      "arch": "x64",
+      "label": "macOS · Intel (x64)",
+      "filename": "printmydoc-agent-1.0.0-macos-x64",
+      "url": "/downloads/agent/1.0.0/printmydoc-agent-1.0.0-macos-x64",
+      "sha256": "61b71f8805e0082b136c4609ba3853a1d7873a8db9895e526ba67860da2bc99f",
+      "size": 56205312
+    },
+    {
+      "platform": "windows",
+      "arch": "x64",
+      "label": "Windows · x64",
+      "filename": "printmydoc-agent-1.0.0-win-x64.exe",
+      "url": "/downloads/agent/1.0.0/printmydoc-agent-1.0.0-win-x64.exe",
+      "sha256": "26ededb7b06927505afd3a34584d13b5126fe60412640a1cf883b7881337bd42",
+      "size": 42572869
+    }
+  ]
+}

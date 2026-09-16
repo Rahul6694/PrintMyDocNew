@@ -8,3 +8,9 @@ build
 npm-debug.log*
 uploads/*
 !uploads/.gitkeep
+
+# Built agent binaries (public/downloads/agent/<version>/) are committed so
+# production downloads work with a plain git deploy — only the pkg build
+# scratch dir is excluded, not its published output.
+agent/dist/
+agent/node_modules
