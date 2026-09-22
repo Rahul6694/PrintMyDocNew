@@ -19,6 +19,46 @@ function authHeaders() {
   };
 }
 
+// Node's fetch throws a bare "fetch failed" for any network-level failure
+// (wrong host, connection refused, DNS, offline), which by itself tells a
+// shop owner nothing actionable. Translate the common causes into a message
+// that names the likely fix, since this is the #1 support issue in practice
+// (agent-config.json left pointing at the localhost:3000 setup default).
+function describeNetworkError(err) {
+  const code = err.cause?.code || err.code;
+  if (code === "ECONNREFUSED" || code === "ENOTFOUND" || code === "EAI_AGAIN" || err.message === "fetch failed") {
+    return (
+      `cannot reach server at ${SERVER_URL} (${code || "fetch failed"}). ` +
+      `Check the Server URL is correct (dashboard → Business Setup → Printers → Agent Credentials) ` +
+      `and this machine has internet/network access. To re-enter it, restart the agent with --reset.`
+    );
+  }
+  return err.message;
+}
+
+// Repeating the exact same error every poll (every 5s) floods the console
+// with nothing new to act on. Collapse consecutive duplicates per-label into
+// one line with a running count instead.
+const lastError = new Map(); // label -> { message, count, printedNewline }
+function logRepeatable(label, message) {
+  const prev = lastError.get(label);
+  if (prev && prev.message === message) {
+    prev.count += 1;
+    process.stdout.write(`\r${label} error: ${message} (x${prev.count})`.padEnd(160));
+    return;
+  }
+  if (prev) process.stdout.write("\n");
+  lastError.set(label, { message, count: 1 });
+  console.error(`${label} error:`, message);
+}
+
+function clearRepeatable(label) {
+  if (lastError.has(label)) {
+    process.stdout.write("\n");
+    lastError.delete(label);
+  }
+}
+
 async function sendHeartbeat() {
   try {
     const printers = await listPrinters();
@@ -28,9 +68,10 @@ async function sendHeartbeat() {
       body: JSON.stringify({ printers, version: AGENT_VERSION }),
     });
     if (!res.ok) throw new Error(`heartbeat failed: ${res.status}`);
+    clearRepeatable("[heartbeat]");
     console.log(`[heartbeat] reported ${printers.length} printer(s)`);
   } catch (err) {
-    console.error("[heartbeat] error:", err.message);
+    logRepeatable("[heartbeat]", describeNetworkError(err));
   }
 }
 
@@ -38,13 +79,14 @@ async function pollJobs() {
   try {
     const res = await fetch(`${SERVER_URL}/api/agent/jobs`, { headers: authHeaders() });
     if (!res.ok) throw new Error(`job poll failed: ${res.status}`);
+    clearRepeatable("[jobs]");
     const { jobs } = await res.json();
 
     for (const job of jobs) {
       await handleJob(job);
     }
   } catch (err) {
-    console.error("[jobs] error:", err.message);
+    logRepeatable("[jobs]", describeNetworkError(err));
   }
 }
 

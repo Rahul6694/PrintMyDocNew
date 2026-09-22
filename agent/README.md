@@ -12,9 +12,15 @@ A small background service you run on the same computer as your printer(s). It:
 ## For shop owners: install the packaged binary
 
 Download the build for your OS from **Business Setup → Printers** in the dashboard and
-run it. On first launch it asks for your Shop ID and Secret Key (from **Generate
-Credentials** on that same page) and saves them to `~/.printmydoc/agent-config.json` —
-you won't be asked again on later launches. No Node.js install required.
+run it. On first launch it asks for the Server URL, Shop ID and Secret Key shown on that
+same page (under **Agent Credentials**) and saves them to `~/.printmydoc/agent-config.json`
+(`%USERPROFILE%\.printmydoc\agent-config.json` on Windows) — you won't be asked again on
+later launches. No Node.js install required.
+
+**Server URL must be the address of your PrintMyDoc dashboard**, not `localhost:3000`,
+unless the app really is running on this same machine. Entering the wrong one is the most
+common cause of the agent looping `[jobs] error: cannot reach server at ...` — run it again
+with `--reset` (e.g. `printmydoc-agent --reset`) to clear the saved config and re-enter it.
 
 Leave it running in the background (e.g. as a login item / systemd service / Task
 Scheduler task) so it's always online while your shop is open.

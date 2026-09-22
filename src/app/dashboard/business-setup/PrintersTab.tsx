@@ -71,6 +71,7 @@ export default function PrintersTab() {
   const [manifest, setManifest] = useState<Manifest | null>(null);
   const [showOtherPlatforms, setShowOtherPlatforms] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
+  const [origin, setOrigin] = useState("");
 
   async function load() {
     const res = await fetch("/api/business/printers");
@@ -82,6 +83,7 @@ export default function PrintersTab() {
   }
 
   useEffect(() => {
+    setOrigin(window.location.origin);
     detectPlatform().then(setDetected);
     load();
     fetch("/downloads/agent/manifest.json")
@@ -387,19 +389,39 @@ export default function PrintersTab() {
           <KeyRound size={16} /> Agent Credentials
         </h3>
         <p className="text-base-500 text-sm mb-4">
-          Generate a Shop ID + Secret Key, then paste them into the PrintMyDoc Agent&apos;s first-run setup prompt.
+          Generate a Shop ID + Secret Key, then paste them — along with the Server URL below — into the PrintMyDoc
+          Agent&apos;s first-run setup prompt.
         </p>
+
+        <div className="bg-base-900 rounded-lg p-4 text-sm font-mono border border-base-700 mb-4">
+          <p className="text-xs text-base-500 font-sans mb-1">Server URL (paste exactly, including http://)</p>
+          <p className="break-all">{origin || "…"}</p>
+        </div>
+
         <button onClick={generateCredentials} disabled={generating} className="btn-primary">
           {generating ? "Generating..." : agent ? "Regenerate Credentials" : "Generate Credentials"}
         </button>
 
         {credentials && (
           <div className="mt-4 bg-base-900 rounded-lg p-4 text-sm font-mono space-y-1 border border-base-700">
+            <p>Server URL: {origin}</p>
             <p>Shop ID: {credentials.shopId}</p>
             <p>Secret Key: {credentials.secret}</p>
-            <p className="text-warning text-xs font-sans mt-2">This secret is shown once. Paste it into the agent when prompted.</p>
+            <p className="text-warning text-xs font-sans mt-2">
+              This secret is shown once. If the agent was already set up with the wrong Server URL (e.g. it&apos;s
+              stuck showing &quot;fetch failed&quot;), delete its saved config and restart it so it asks again — see
+              the note below.
+            </p>
           </div>
         )}
+
+        <p className="text-xs text-base-500 mt-4">
+          Agent stuck printing <span className="font-mono">[jobs] error: fetch failed</span> in a loop? That means
+          it&apos;s pointed at the wrong Server URL (often the default <span className="font-mono">localhost:3000</span>).
+          Delete its saved config file — Windows: <span className="font-mono">%USERPROFILE%\.printmydoc\agent-config.json</span>,
+          macOS/Linux: <span className="font-mono">~/.printmydoc/agent-config.json</span> — then relaunch the agent and
+          re-enter the Server URL shown above.
+        </p>
       </div>
     </div>
   );

@@ -20,6 +20,10 @@ function writeConfigFile(config) {
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
 }
 
+function resetConfigFile() {
+  fs.rm(CONFIG_FILE, { force: true }, () => {});
+}
+
 function ask(rl, question, defaultValue) {
   return new Promise((resolve) => {
     const suffix = defaultValue ? ` (${defaultValue})` : "";
@@ -30,7 +34,10 @@ function ask(rl, question, defaultValue) {
 async function runWizard(seed) {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   console.log("\nPrintMyDoc Agent — first-run setup");
-  console.log("Find your Shop ID & Secret Key in the dashboard: Business Setup → Printers → Generate Credentials.\n");
+  console.log("Find your Server URL, Shop ID & Secret Key in the dashboard: Business Setup → Printers → Agent Credentials.");
+  console.log(
+    `(Server URL is NOT ${DEFAULT_SERVER_URL} unless you're running PrintMyDoc on this same machine — copy the exact address shown in the dashboard.)\n`
+  );
   const serverUrl = await ask(rl, "Server URL", seed.serverUrl || DEFAULT_SERVER_URL);
   const shopId = await ask(rl, "Shop ID", seed.shopId);
   const agentSecret = await ask(rl, "Secret Key", seed.agentSecret);
@@ -42,6 +49,11 @@ async function runWizard(seed) {
 // power users / CI, then the saved config file from a previous first run, then an
 // interactive prompt that saves what it collects so future launches don't re-ask.
 async function loadConfig() {
+  if (process.argv.includes("--reset")) {
+    resetConfigFile();
+    console.log("Saved agent config cleared — running first-run setup again.\n");
+  }
+
   const fromEnv = {
     serverUrl: process.env.SERVER_URL,
     shopId: process.env.SHOP_ID,
