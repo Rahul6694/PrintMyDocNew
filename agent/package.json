@@ -1,7 +1,7 @@
 {
   "name": "printmydoc-agent",
   "productName": "PrintMyDoc Agent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Local print agent for PrintMyDoc — detects installed printers and prints queued orders.",
   "main": "index.js",
