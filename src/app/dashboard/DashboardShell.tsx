@@ -25,6 +25,8 @@ import {
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
+  Menu,
+  X,
 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -62,6 +64,20 @@ export default function DashboardShell({
 }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Lock background scroll while the mobile drawer is open.
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   useEffect(() => {
     try {
@@ -88,25 +104,57 @@ export default function DashboardShell({
     window.location.href = "/login";
   }
 
+  // On mobile the drawer always shows the full (expanded) sidebar.
+  const isCollapsed = collapsed && !mobileOpen;
+
   return (
-    <div className="h-screen flex overflow-hidden">
+    <div className="h-[100dvh] flex flex-col md:flex-row overflow-hidden">
+      <header className="md:hidden flex items-center justify-between gap-3 px-4 h-14 border-b border-base-700/60 bg-base-850 shrink-0">
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="w-9 h-9 rounded-full flex items-center justify-center border border-base-700 hover:border-accent-500 transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu size={17} />
+        </button>
+        <Link href="/" className="text-lg font-bold tracking-tight whitespace-nowrap">
+          Print<span className="text-accent-400">MyDoc</span>
+        </Link>
+        <ThemeToggle variant="icon" />
+      </header>
+
+      {mobileOpen && (
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <aside
-        className={`${
-          collapsed ? "w-[72px]" : "w-64"
-        } h-full border-r border-base-700/60 flex flex-col shrink-0 transition-all duration-150 bg-base-850`}
+        className={`${isCollapsed ? "md:w-[72px]" : "md:w-64"} w-72 max-w-[85vw] fixed inset-y-0 left-0 z-50 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        } md:static md:translate-x-0 md:z-auto h-full border-r border-base-700/60 flex flex-col shrink-0 transition-all duration-200 bg-base-850`}
       >
-        <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-4 pt-5 pb-4`}>
-          {!collapsed && (
+        <div className={`flex items-center ${isCollapsed ? "justify-center" : "justify-between"} px-4 pt-5 pb-4`}>
+          {!isCollapsed && (
             <Link href="/" className="text-lg font-bold tracking-tight whitespace-nowrap">
               Print<span className="text-accent-400">MyDoc</span>
             </Link>
           )}
           <button
             onClick={toggleCollapsed}
-            className="w-8 h-8 rounded-full flex items-center justify-center border border-base-700 hover:border-accent-500 transition-colors shrink-0"
+            className="hidden md:flex w-8 h-8 rounded-full items-center justify-center border border-base-700 hover:border-accent-500 transition-colors shrink-0"
             aria-label="Toggle sidebar"
           >
-            {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+            {isCollapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+          </button>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="md:hidden w-8 h-8 rounded-full flex items-center justify-center border border-base-700 hover:border-accent-500 transition-colors shrink-0"
+            aria-label="Close menu"
+          >
+            <X size={15} />
           </button>
         </div>
 
@@ -118,15 +166,15 @@ export default function DashboardShell({
               <div key={item.href}>
                 <Link
                   href={item.href}
-                  title={collapsed ? item.label : undefined}
+                  title={isCollapsed ? item.label : undefined}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive ? "bg-accent-500 text-white" : "text-base-500 hover:bg-base-800 hover:text-ink"
-                  } ${collapsed ? "justify-center" : ""}`}
+                  } ${isCollapsed ? "justify-center" : ""}`}
                 >
                   <Icon size={17} className="shrink-0" />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
+                  {!isCollapsed && <span className="truncate">{item.label}</span>}
                 </Link>
-                {item.group && !collapsed && isActive && (
+                {item.group && !isCollapsed && isActive && (
                   <div className="ml-4 pl-3 border-l border-base-700 my-1 flex flex-col gap-0.5">
                     {item.group.map((sub) => {
                       const SubIcon = sub.icon;
@@ -134,6 +182,7 @@ export default function DashboardShell({
                         <Link
                           key={sub.href}
                           href={sub.href}
+                          onClick={() => setMobileOpen(false)}
                           className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg text-xs text-base-500 hover:bg-base-800 hover:text-ink transition-colors"
                         >
                           <SubIcon size={14} className="shrink-0" />
@@ -149,19 +198,19 @@ export default function DashboardShell({
         </nav>
 
         <div className="border-t border-base-700/60 p-3 flex flex-col gap-1">
-          {!collapsed && <p className="px-3 text-xs text-base-500 truncate mb-1">{shopEmail}</p>}
+          {!isCollapsed && <p className="px-3 text-xs text-base-500 truncate mb-1">{shopEmail}</p>}
           <ThemeToggle />
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-danger hover:bg-danger/10 transition-colors"
           >
             <LogOut size={16} />
-            {!collapsed && "Log Out"}
+            {!isCollapsed && "Log Out"}
           </button>
         </div>
       </aside>
 
-      <main className="flex-1 min-w-0 h-full overflow-y-auto overflow-x-hidden p-8">{children}</main>
+      <main className="flex-1 min-w-0 min-h-0 md:h-full overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8">{children}</main>
     </div>
   );
 }

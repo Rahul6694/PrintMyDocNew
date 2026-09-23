@@ -30,10 +30,10 @@ export default function FaqSection() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="max-w-3xl mx-auto px-6 py-20">
+    <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
       <div className="text-center mb-10">
         <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">FAQ</span>
-        <h2 className="text-3xl md:text-4xl font-bold">Frequently asked questions</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">Frequently asked questions</h2>
       </div>
 
       <div className="space-y-3">

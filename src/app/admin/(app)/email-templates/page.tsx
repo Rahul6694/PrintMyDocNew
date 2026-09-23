@@ -65,7 +65,7 @@ export default function EmailTemplatesPage() {
         ))}
       </div>
 
-      <div className="card p-6 max-w-2xl space-y-4">
+      <div className="card p-4 sm:p-6 max-w-2xl space-y-4">
         <div>
           <label className="text-sm text-base-500 block mb-1.5">Subject</label>
           <input value={subject} onChange={(e) => setSubject(e.target.value)} className="input-field" />

@@ -30,10 +30,10 @@ const ROWS = [
 
 export default function ComparisonTable() {
   return (
-    <section className="max-w-6xl mx-auto px-6 py-20">
-      <div className="text-center max-w-xl mx-auto mb-12">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
         <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">Manual vs automated</span>
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">One counter. Two completely different workflows.</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">One counter. Two completely different workflows.</h2>
         <p className="text-base-500">
           Manual printing depends on repeated questions, downloads, and staff memory. PrintMyDoc turns the
           same work into a traceable order from upload to printer.

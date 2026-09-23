@@ -25,13 +25,13 @@ const CARDS = [
 
 export default function WhatsAppSection() {
   return (
-    <section id="whatsapp" className="max-w-7xl mx-auto px-6 py-20">
+    <section id="whatsapp" className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">
             WhatsApp order automation
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">
             WhatsApp intake, without risking your number
           </h2>
           <p className="text-base-500 mb-6">

@@ -122,20 +122,20 @@ function RegisterForm() {
     <div className="min-h-screen bg-base-950">
       <AuthHeader />
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      <main className="px-6 py-16">
-      <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+      <main className="px-4 sm:px-6 py-8 sm:py-16">
+      <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         <div>
           <span className="text-xs font-bold uppercase tracking-wide text-success">
             {step === "details" ? "Step 1 of 2" : "Step 2 of 2"}
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mt-3 mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mt-3 mb-4 sm:mb-6">
             {step === "details" ? (
               <>Create your merchant account in under a minute.</>
             ) : (
               <>Pick a plan to activate your shop.</>
             )}
           </h1>
-          <p className="text-base-500 text-lg mb-8 max-w-md">
+          <p className="text-base-500 text-base sm:text-lg mb-6 sm:mb-8 max-w-md">
             {step === "details"
               ? "Enter your details, then choose and pay for a plan — your account is created the moment payment is confirmed."
               : "Your account is created only after payment succeeds. Nothing is saved if you close this before paying."}
@@ -157,7 +157,7 @@ function RegisterForm() {
         </div>
 
         {step === "details" ? (
-          <div className="card p-8">
+          <div className="card p-5 sm:p-8">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-11 h-11 rounded-xl bg-accent-500 text-white flex items-center justify-center shrink-0">
                 <Printer size={20} />
@@ -267,7 +267,7 @@ function RegisterForm() {
             </p>
           </div>
         ) : (
-          <div className="card p-8">
+          <div className="card p-5 sm:p-8">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-11 h-11 rounded-xl bg-accent-500 text-white flex items-center justify-center shrink-0">
                 <Printer size={20} />

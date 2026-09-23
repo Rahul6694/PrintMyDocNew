@@ -34,25 +34,25 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="max-w-6xl mx-auto px-6 py-20">
+    <section id="contact" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
       <div className="grid lg:grid-cols-[1fr_1.3fr] gap-6">
-        <div className="rounded-2xl bg-gradient-to-br from-accent-600 to-accent-400 p-8 text-white flex flex-col">
+        <div className="rounded-2xl bg-gradient-to-br from-accent-600 to-accent-400 p-6 sm:p-8 text-white flex flex-col">
           <span className="badge bg-white/20 text-white mb-6 self-start">Support</span>
-          <h2 className="text-3xl font-bold mb-4">How can we help?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">How can we help?</h2>
           <p className="text-white/85 mb-8">
             Send your question and we&apos;ll get back to you. Only the message is required.
           </p>
           <div className="mt-auto">
             <a
               href="mailto:support@printmydoc.app"
-              className="flex items-center gap-2.5 bg-white/15 hover:bg-white/25 transition-colors rounded-xl px-4 py-3 font-medium"
+              className="flex items-center gap-2.5 bg-white/15 hover:bg-white/25 transition-colors rounded-xl px-4 py-3 font-medium break-all"
             >
               <Mail size={16} /> support@printmydoc.app
             </a>
           </div>
         </div>
 
-        <div className="card p-8">
+        <div className="card p-5 sm:p-8">
           <h3 className="font-semibold text-lg mb-1">Contact us</h3>
           <p className="text-base-500 text-sm mb-5">Send us your question and contact details.</p>
 
@@ -86,7 +86,7 @@ export default function ContactSection() {
                 />
               </div>
               {error && <p className="text-danger text-sm">{error}</p>}
-              <button type="submit" disabled={status === "sending"} className="btn-primary flex items-center gap-2">
+              <button type="submit" disabled={status === "sending"} className="btn-primary flex items-center justify-center gap-2 w-full sm:w-auto">
                 <Send size={14} /> {status === "sending" ? "Sending..." : "Send enquiry"}
               </button>
             </form>

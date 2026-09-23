@@ -43,7 +43,7 @@ export default function ContactEnquiriesPage() {
       {loading ? (
         <p className="text-base-500 text-sm">Loading...</p>
       ) : enquiries.length === 0 ? (
-        <div className="card p-10 text-center text-base-500">No enquiries yet.</div>
+        <div className="card p-6 sm:p-10 text-center text-base-500">No enquiries yet.</div>
       ) : (
         <div className="space-y-3">
           {enquiries.map((e) => (

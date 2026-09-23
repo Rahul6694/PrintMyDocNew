@@ -104,7 +104,7 @@ export default function BillingPage() {
       </p>
 
       {!loading && subscription && (
-        <div className="card p-4 mb-6 max-w-2xl flex items-center justify-between">
+        <div className="card p-4 mb-6 max-w-2xl flex items-center justify-between flex-wrap gap-3">
           <div>
             <p className="text-sm text-base-500">Current plan</p>
             <p className="font-semibold capitalize">{subscription.plan}</p>
@@ -122,11 +122,11 @@ export default function BillingPage() {
         </div>
       )}
 
-      <div className="grid md:grid-cols-3 gap-5 max-w-3xl">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 max-w-3xl">
         {PLAN_LIST.map((plan) => {
           const isCurrent = subscription?.plan === plan.id;
           return (
-            <div key={plan.id} className={`card p-6 flex flex-col ${isCurrent ? "shadow-glow" : ""}`}>
+            <div key={plan.id} className={`card p-4 sm:p-6 flex flex-col ${isCurrent ? "shadow-glow" : ""}`}>
               <h3 className="font-semibold text-lg">{plan.name}</h3>
               <p className="text-2xl font-bold mt-1 mb-4">
                 ₹{plan.price}

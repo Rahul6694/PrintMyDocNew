@@ -97,7 +97,7 @@ export default function StoragePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
         <div className="card p-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-3 mb-3">
             <p className="font-semibold text-sm flex items-center gap-1.5">
               <FolderOpen size={15} /> Categories
             </p>
@@ -128,7 +128,8 @@ export default function StoragePage() {
             ) : visibleFiles.length === 0 ? (
               <p className="text-base-500 text-sm p-10 text-center">No files uploaded yet.</p>
             ) : (
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto">
+              <table className="w-full text-sm min-w-[560px]">
                 <thead className="text-left text-base-500 border-b border-base-700/60">
                   <tr>
                     <th className="px-4 py-3 font-medium">File</th>
@@ -162,6 +163,7 @@ export default function StoragePage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
 

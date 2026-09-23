@@ -7,9 +7,9 @@ export default async function ShopOrderPage({ params }: { params: { slug: string
   if (!data) notFound();
 
   return (
-    <main className="min-h-screen px-4 py-10">
+    <main className="min-h-screen px-4 py-6 sm:py-10">
       <div className="max-w-lg mx-auto">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <p className="text-xs text-accent-400 font-semibold uppercase tracking-wide mb-1">
             Order online
           </p>

@@ -88,7 +88,7 @@ export default function AutomationPaymentTab() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <h3 className="font-semibold mb-4">General Settings</h3>
 
         <div className="space-y-2 mb-6">
@@ -97,7 +97,7 @@ export default function AutomationPaymentTab() {
             { key: "whatsapp_ack" as const, label: "WhatsApp Acknowledgement", desc: "Auto-reply to customer when their order is received" },
             { key: "print_receipt" as const, label: "Print Receipt", desc: "Print a paper receipt for each completed order" },
           ].map((row) => (
-            <div key={row.key} className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+            <div key={row.key} className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
               <div>
                 <p className="text-sm font-medium">{row.label}</p>
                 <p className="text-xs text-base-500">{row.desc}</p>
@@ -114,7 +114,7 @@ export default function AutomationPaymentTab() {
             <a href="/dashboard/billing" className="underline">upgrade</a>.
           </p>
         )}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
           {[
             { key: "auto_all", label: "Auto Print All Documents", desc: "Every document prints automatically after confirmation", locked: plan !== "premium" },
             { key: "after_payment", label: "Print Only After Payment", desc: "Prints automatically only after online payment is verified", locked: plan !== "premium" },
@@ -128,7 +128,7 @@ export default function AutomationPaymentTab() {
                 settings.auto_print_mode === opt.key ? "border-accent-500 bg-accent-500/10" : "border-base-700"
               } ${opt.locked ? "opacity-60 cursor-not-allowed" : ""}`}
             >
-              <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center justify-between gap-3 mb-1">
                 <span className="font-medium">{opt.label}</span>
                 {opt.locked && <Lock size={13} className="text-base-500" />}
               </div>
@@ -138,7 +138,7 @@ export default function AutomationPaymentTab() {
         </div>
 
         <p className="text-xs text-base-500 uppercase tracking-wide mb-2">Order separator</p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { key: "none", label: "No Separator" },
             { key: "bw_invoice", label: "B/W Invoice" },
@@ -157,10 +157,10 @@ export default function AutomationPaymentTab() {
         </div>
       </div>
 
-      <div className="card p-6 space-y-4">
+      <div className="card p-4 sm:p-6 space-y-4">
         <h3 className="font-semibold">Payment &amp; Limits</h3>
 
-        <div className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+        <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
           <div>
             <p className="text-sm font-medium">Accept online payments</p>
             <p className="text-xs text-base-500">Enables Razorpay checkout on the customer order page</p>
@@ -172,7 +172,7 @@ export default function AutomationPaymentTab() {
         </div>
 
         <div className="border border-base-700 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-3 mb-3">
             <div>
               <p className="text-sm font-medium">Use my own Razorpay account</p>
               <p className="text-xs text-base-500">Settle directly to your Razorpay account instead of the platform's</p>
@@ -183,7 +183,7 @@ export default function AutomationPaymentTab() {
             />
           </div>
           {settings.use_own_razorpay === 1 && (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <input
                 className="input-field"
                 placeholder="rzp_live_..."
@@ -206,7 +206,7 @@ export default function AutomationPaymentTab() {
           )}
         </div>
 
-        <div className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+        <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
           <div>
             <p className="text-sm font-medium">Allow confirmation with manual payment</p>
             <p className="text-xs text-base-500">Customers can confirm and pay cash/offline at the shop</p>
@@ -227,7 +227,7 @@ export default function AutomationPaymentTab() {
           />
         </div>
 
-        <div className="border border-base-700 rounded-lg p-4 flex items-center gap-4">
+        <div className="border border-base-700 rounded-lg p-4 flex flex-wrap items-center gap-4">
           <div className="w-14 h-14 rounded-lg bg-base-900 border border-base-700 flex items-center justify-center overflow-hidden shrink-0">
             {settings.payment_logo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -251,7 +251,7 @@ export default function AutomationPaymentTab() {
           </label>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="text-sm text-base-500 block mb-1.5">UPI ID</label>
             <input

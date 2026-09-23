@@ -47,7 +47,7 @@ export default function AdminShopsPage() {
         <p className="text-base-500 text-sm">Loading...</p>
       ) : (
         <div className="card overflow-hidden overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="text-left text-base-500 border-b border-base-700/60">
               <tr>
                 <th className="px-4 py-3 font-medium">Shop</th>

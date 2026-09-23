@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen">
       <AuthHeader />
-      <main className="flex items-center justify-center px-6 py-12">
+      <main className="flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <p className="text-lg font-bold tracking-tight">
@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
           </p>
           <p className="text-base-500 text-sm mt-2">Super admin sign in</p>
         </div>
-        <form onSubmit={handleSubmit} className="card p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="card p-4 sm:p-6 space-y-4">
           <div>
             <label className="text-sm text-base-500 block mb-1.5">Email</label>
             <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />

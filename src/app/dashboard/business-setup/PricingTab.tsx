@@ -50,7 +50,7 @@ export default function PricingTab() {
   if (loading) return <p className="text-base-500 text-sm">Loading...</p>;
 
   return (
-    <div className="card p-6 max-w-2xl">
+    <div className="card p-4 sm:p-6 max-w-2xl">
       <h3 className="font-semibold mb-1">Dynamic Pricing Grid</h3>
       <p className="text-base-500 text-sm mb-5">Set per-page rates for each print configuration</p>
 
@@ -58,7 +58,7 @@ export default function PricingTab() {
         {rules.map((r) => (
           <div
             key={r.id}
-            className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3"
+            className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3"
           >
             <div>
               <p className="text-xs text-base-500">{r.paper_size} Paper</p>

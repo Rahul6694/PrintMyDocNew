@@ -70,16 +70,16 @@ export default function ReferralsPage() {
       <div className="card p-5 mb-6 max-w-2xl">
         <h3 className="font-semibold mb-1">Your referral code</h3>
         <p className="text-base-500 text-sm mb-3">Share this link — new merchants who sign up and subscribe earn you ₹50 each.</p>
-        <div className="flex gap-2">
-          <input readOnly value={referralCode} className="input-field w-32 font-mono" />
-          <input readOnly value={referralLink} className="input-field flex-1 text-xs" />
+        <div className="flex flex-wrap sm:flex-nowrap gap-2">
+          <input readOnly value={referralCode} className="input-field w-full sm:w-32 font-mono" />
+          <input readOnly value={referralLink} className="input-field flex-1 min-w-0 text-xs" />
           <button onClick={copyLink} className="btn-primary shrink-0">
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-6 gap-3 mb-6 max-w-4xl">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6 max-w-4xl">
         {(["locked", "available", "reserved", "withdrawn", "cancelled", "reversed"] as const).map((key) => (
           <div key={key} className="card p-3">
             <p className="text-xs text-base-500 capitalize">{key}</p>
@@ -88,7 +88,7 @@ export default function ReferralsPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-5 mb-6 max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6 max-w-4xl">
         <div className="card p-5">
           <h3 className="font-semibold mb-3">Referred merchants</h3>
           {referredShops.length === 0 ? (
@@ -96,8 +96,8 @@ export default function ReferralsPage() {
           ) : (
             <div className="space-y-2">
               {referredShops.map((s) => (
-                <div key={s.id} className="flex items-center justify-between text-sm border-b border-base-700/40 pb-2 last:border-0">
-                  <span>{s.name}</span>
+                <div key={s.id} className="flex items-center justify-between gap-3 text-sm border-b border-base-700/40 pb-2 last:border-0">
+                  <span className="min-w-0 truncate">{s.name}</span>
                   <span className="badge bg-base-700 text-base-500 capitalize">{s.status || "no earning yet"}</span>
                 </div>
               ))}
@@ -137,7 +137,7 @@ export default function ReferralsPage() {
         ) : (
           <div className="space-y-2">
             {history.map((w) => (
-              <div key={w.id} className="flex items-center justify-between text-sm border-b border-base-700/40 pb-2 last:border-0">
+              <div key={w.id} className="flex items-center justify-between gap-3 text-sm border-b border-base-700/40 pb-2 last:border-0">
                 <span>{new Date(w.requested_at).toLocaleDateString()}</span>
                 <span>₹{w.net_amount}</span>
                 <span className="badge bg-base-700 text-base-500 capitalize">{w.status}</span>

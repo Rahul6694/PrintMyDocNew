@@ -29,14 +29,14 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="max-w-7xl mx-auto px-6 py-20">
-      <div className="text-center max-w-xl mx-auto mb-12">
+    <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
         <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">How it works</span>
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">Scan. Upload. Choose. Print.</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Scan. Upload. Choose. Print.</h2>
         <p className="text-base-500">Four simple steps take a customer from your shop QR to a confirmed print order.</p>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-5">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {STEPS.map((s) => (
           <div key={s.title} className="card p-6">
             <span className="w-11 h-11 rounded-xl bg-accent-500/10 text-accent-500 flex items-center justify-center mb-4">

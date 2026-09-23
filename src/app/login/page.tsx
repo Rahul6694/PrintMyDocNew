@@ -43,8 +43,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-base-950">
       <AuthHeader />
-      <main className="flex items-center justify-center px-6 py-12">
-      <div className="w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl grid lg:grid-cols-2 bg-base-850">
+      <main className="flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+      <div className="w-full max-w-md lg:max-w-4xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl grid lg:grid-cols-2 bg-base-850">
         <div className="hidden lg:flex flex-col justify-between p-10 bg-gradient-to-br from-accent-600 to-accent-400 text-white relative overflow-hidden">
           <div className="absolute -right-10 -top-10 w-52 h-52 rounded-full bg-white/10" />
           <div className="relative">
@@ -71,7 +71,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="p-8 sm:p-10 bg-base-850">
+        <div className="p-6 sm:p-10 bg-base-850">
           <div className="flex flex-col items-center text-center mb-6">
             <span className="w-12 h-12 rounded-xl bg-accent-500 text-white flex items-center justify-center mb-4">
               <Printer size={20} />

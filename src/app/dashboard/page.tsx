@@ -41,13 +41,13 @@ function StatCard({
 }) {
   return (
     <div className="rounded-2xl p-5 text-white relative overflow-hidden" style={{ backgroundColor: colorVar }}>
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex items-start justify-between gap-3 mb-6">
         <p className="font-semibold text-sm opacity-95">{label}</p>
         <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
           <Icon size={16} />
         </div>
       </div>
-      <p className="text-3xl font-bold mb-1">{value}</p>
+      <p className="text-2xl sm:text-3xl font-bold mb-1 break-words">{value}</p>
       <p className="text-xs opacity-80">{sub}</p>
     </div>
   );
@@ -106,13 +106,13 @@ export default function DashboardPage() {
           <Link href="/dashboard/billing" className="btn-primary text-sm">
             Upgrade plan
           </Link>
-          <form onSubmit={handleSearch} className="relative">
+          <form onSubmit={handleSearch} className="relative flex-1 min-w-[10rem] sm:flex-none">
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-base-500" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search orders..."
-              className="input-field pl-9 w-48 text-sm"
+              className="input-field pl-9 w-full sm:w-48 text-sm"
             />
           </form>
           <div className="relative" ref={notifRef}>
@@ -123,7 +123,7 @@ export default function DashboardPage() {
               <Bell size={16} />
             </button>
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-64 card p-4 z-10">
+              <div className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-2rem)] card p-4 z-10">
                 <p className="text-sm font-semibold mb-1">Notifications</p>
                 <p className="text-xs text-base-500">No new notifications yet.</p>
               </div>
@@ -190,7 +190,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
         <div className="card p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between gap-3 mb-4">
             <div>
               <h3 className="font-semibold">Orders This Week</h3>
               <p className="text-xs text-base-500">
@@ -257,7 +257,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="card overflow-hidden lg:col-span-2">
-          <div className="px-5 py-4 flex items-center justify-between border-b border-base-700/60">
+          <div className="px-4 sm:px-5 py-4 flex items-center justify-between flex-wrap gap-3 border-b border-base-700/60">
             <div>
               <h3 className="font-semibold">Recent Orders</h3>
               <p className="text-xs text-base-500">Today&apos;s incoming orders</p>
@@ -275,7 +275,8 @@ export default function DashboardPage() {
               </p>
             </div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[560px]">
               <thead className="text-left text-base-500 border-b border-base-700/60">
                 <tr>
                   <th className="px-5 py-2 font-medium">Customer</th>
@@ -295,6 +296,7 @@ export default function DashboardPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </div>

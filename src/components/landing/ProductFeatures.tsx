@@ -26,17 +26,17 @@ const FEATURES = [
 
 export default function ProductFeatures() {
   return (
-    <section id="product" className="max-w-7xl mx-auto px-6 py-20">
-      <div className="text-center max-w-xl mx-auto mb-12">
+    <section id="product" className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
         <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">How it&apos;s built</span>
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">Three parts running under your counter.</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Three parts running under your counter.</h2>
         <p className="text-base-500">
           Every order flows through the same pipeline — priced by your rules, queued in one dashboard, and
           released to your printer by a small local agent.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-5">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {FEATURES.map((f) => (
           <div key={f.title} className="card p-6">
             <div className="flex items-center justify-between mb-4">

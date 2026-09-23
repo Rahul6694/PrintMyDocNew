@@ -35,7 +35,7 @@ export default function QrPage() {
         Download, print and test the permanent QR displayed at your counter.
       </p>
 
-      <div className="card p-6 max-w-2xl flex flex-col sm:flex-row gap-6 items-center">
+      <div className="card p-4 sm:p-6 max-w-2xl flex flex-col sm:flex-row gap-6 items-center">
         <div className="w-56 shrink-0">
           <div className="rounded-2xl bg-accent-500 p-4 text-white text-center">
             <p className="font-bold text-sm mb-2">

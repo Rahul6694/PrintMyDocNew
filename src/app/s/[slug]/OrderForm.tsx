@@ -282,7 +282,7 @@ export default function OrderForm({
 
   if (status === "paid" || status === "placed") {
     return (
-      <div className="card p-8 text-center">
+      <div className="card p-6 sm:p-8 text-center">
         <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-success/10 border border-success/30 flex items-center justify-center">
           <CheckCircle2 size={28} className="text-success" />
         </div>
@@ -335,12 +335,12 @@ export default function OrderForm({
           e.preventDefault();
           submitOrder(canPayOnline ? "razorpay" : "manual");
         }}
-        className="card p-6 space-y-5"
+        className="card p-4 sm:p-6 space-y-5"
         aria-busy={status === "submitting"}
       >
         <fieldset disabled={status === "submitting"} className="space-y-5 disabled:opacity-60">
           {showDetailsPage && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-base-500 block mb-1.5">Your name</label>
                 <input
@@ -379,7 +379,7 @@ export default function OrderForm({
             />
 
             {file && fileIsImage && frontPreviewUrl && (
-              <div className="mt-2 flex items-center gap-3">
+              <div className="mt-2 flex flex-wrap items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={frontPreviewUrl}
@@ -400,7 +400,7 @@ export default function OrderForm({
 
           {file && fileIsImage && (
             <div className="border border-base-700 rounded-lg p-4 space-y-3">
-              <label className="flex items-center gap-2">
+              <label className="flex items-start gap-2">
                 <button
                   type="button"
                   onClick={() => setIsTwoSided(!isTwoSided)}
@@ -429,7 +429,7 @@ export default function OrderForm({
                       className="input-field file:mr-3 file:btn-primary file:border-0 file:cursor-pointer"
                     />
                     {backFile && backPreviewUrl && (
-                      <div className="mt-2 flex items-center gap-3">
+                      <div className="mt-2 flex flex-wrap items-center gap-3">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={backPreviewUrl}
@@ -450,7 +450,7 @@ export default function OrderForm({
 
                   <div>
                     <p className="text-sm text-base-500 mb-1.5">Layout</p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2">
                       <button
                         type="button"
                         onClick={() => setLayoutMode("same_page")}
@@ -574,18 +574,18 @@ export default function OrderForm({
             />
           </div>
 
-          <div className="flex items-center justify-between border-t border-base-700/60 pt-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-base-700/60 pt-4">
             <div>
               <p className="text-xs text-base-500">Estimated total</p>
               <p className="text-xl font-bold">{estimate ? `₹${estimate}` : "—"}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-col-reverse min-[400px]:flex-row gap-2">
               {canPayManually && (
                 <button
                   type="button"
                   onClick={() => submitOrder("manual")}
                   disabled={status === "submitting" || !estimate}
-                  className="text-sm font-semibold border border-base-700 rounded-lg px-4 py-2.5 hover:border-accent-500 transition-colors flex items-center gap-2"
+                  className="text-sm font-semibold border border-base-700 rounded-lg px-4 py-2.5 hover:border-accent-500 transition-colors flex items-center justify-center gap-2"
                 >
                   {status === "submitting" && <Loader2 size={14} className="animate-spin" />}
                   Pay at shop
@@ -595,7 +595,7 @@ export default function OrderForm({
                 <button
                   type="submit"
                   disabled={status === "submitting" || !estimate}
-                  className="btn-primary flex items-center gap-2"
+                  className="btn-primary flex items-center justify-center gap-2 min-[400px]:flex-1 sm:flex-none"
                 >
                   {status === "submitting" && <Loader2 size={14} className="animate-spin" />}
                   {status === "submitting" ? "Processing..." : "Pay & submit order"}

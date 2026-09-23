@@ -190,7 +190,7 @@ export default function WithdrawPage() {
           ) : (
             <div className="space-y-2">
               {data.withdrawalHistory.map((w) => (
-                <div key={w.id} className="flex items-center justify-between text-sm border-b border-base-700/40 pb-2 last:border-0">
+                <div key={w.id} className="flex items-center justify-between gap-3 text-sm border-b border-base-700/40 pb-2 last:border-0">
                   <span>{new Date(w.requested_at).toLocaleDateString()}</span>
                   <span>₹{w.net_amount}</span>
                   <span className="badge bg-base-700 text-base-500 capitalize">{w.status}</span>
@@ -244,7 +244,7 @@ export default function WithdrawPage() {
           <p className="text-base-500 text-sm py-6 text-center">No Razorpay transactions in this period.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[560px]">
               <thead className="text-left text-base-500 border-b border-base-700/60">
                 <tr>
                   <th className="py-2 font-medium">Date</th>

@@ -173,7 +173,7 @@ export default function PrintersTab() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <div className="flex items-start gap-3 mb-5">
           <span className="w-11 h-11 rounded-xl bg-accent-500 text-white flex items-center justify-center shrink-0">
             <Cpu size={20} />
@@ -296,7 +296,7 @@ export default function PrintersTab() {
         )}
       </div>
 
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-1">
           <span className="w-9 h-9 rounded-lg bg-success/10 text-success flex items-center justify-center shrink-0">
             <Activity size={16} />
@@ -316,7 +316,7 @@ export default function PrintersTab() {
           <div className="space-y-2 mt-4 mb-4">
             {printers.map((p) => (
               <div key={p.id} className="border border-base-700 rounded-lg px-4 py-3">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between gap-3 mb-2">
                   <p className="font-medium">{p.name}</p>
                   <div className="flex items-center gap-2">
                     <span
@@ -384,7 +384,7 @@ export default function PrintersTab() {
         )}
       </div>
 
-      <div id="agent-credentials" className="card p-6">
+      <div id="agent-credentials" className="card p-4 sm:p-6">
         <h3 className="font-semibold mb-1 flex items-center gap-2">
           <KeyRound size={16} /> Agent Credentials
         </h3>

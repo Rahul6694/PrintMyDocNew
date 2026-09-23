@@ -23,8 +23,8 @@ const COLUMNS = [
 export default function Footer() {
   return (
     <footer className="border-t border-base-700/60">
-      <div className="max-w-7xl mx-auto px-6 py-14 grid sm:grid-cols-2 md:grid-cols-4 gap-10">
-        <div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
+        <div className="col-span-2 md:col-span-1">
           <p className="text-lg font-bold tracking-tight mb-3">
             Print<span className="text-accent-400">MyDoc</span>
           </p>
@@ -43,7 +43,7 @@ export default function Footer() {
             </div>
           </div>
         ))}
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <p className="font-semibold text-sm mb-3">Merchant</p>
           <div className="flex flex-col gap-2 items-start">
             <Link href="/login" className="text-sm text-accent-400 hover:underline">

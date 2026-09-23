@@ -171,7 +171,7 @@ export default function PhotoEditor({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-      <div className="card w-full max-w-md p-5">
+      <div className="card w-full max-w-md p-4 sm:p-5 max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold">{title}</h3>
           <button type="button" onClick={onCancel} className="text-base-500 hover:text-ink" aria-label="Close">

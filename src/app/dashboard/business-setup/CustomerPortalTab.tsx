@@ -61,12 +61,12 @@ export default function CustomerPortalTab() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
-      <div className="card p-6 space-y-6">
+      <div className="card p-4 sm:p-6 space-y-6">
         <div>
           <h3 className="font-semibold mb-1">Portal Service Controls</h3>
           <p className="text-base-500 text-sm mb-4">Choose exactly what customers can select when placing an order</p>
 
-          <div className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3 mb-2">
+          <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3 mb-2">
             <div>
               <p className="font-medium text-sm">Customer details page</p>
               <p className="text-xs text-base-500">When disabled, customers skip straight to document upload</p>
@@ -78,12 +78,12 @@ export default function CustomerPortalTab() {
           </div>
 
           {settings.show_customer_details_page === 1 && (
-            <div className="grid grid-cols-2 gap-2 mb-2 ml-4">
-              <div className="flex items-center justify-between border border-base-700 rounded-lg px-3 py-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 sm:ml-4">
+              <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-3 py-2">
                 <span className="text-sm">Require full name</span>
                 <Toggle checked={!!settings.require_name} onChange={(v) => persist({ ...settings, require_name: v ? 1 : 0 })} />
               </div>
-              <div className="flex items-center justify-between border border-base-700 rounded-lg px-3 py-2">
+              <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-3 py-2">
                 <span className="text-sm">Require mobile number</span>
                 <Toggle checked={!!settings.require_mobile} onChange={(v) => persist({ ...settings, require_mobile: v ? 1 : 0 })} />
               </div>
@@ -95,7 +95,7 @@ export default function CustomerPortalTab() {
           <p className="text-xs text-base-500 uppercase tracking-wide mb-2">Print options shown to customers</p>
           <div className="space-y-2">
             {SERVICE_ROWS.map((row) => (
-              <div key={row.key} className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+              <div key={row.key} className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
                 <span className="text-sm">{row.label}</span>
                 <Toggle
                   checked={settings.service_toggles[row.key] !== false}
@@ -113,9 +113,9 @@ export default function CustomerPortalTab() {
 
         <div>
           <p className="text-xs text-base-500 uppercase tracking-wide mb-2">Paper formats</p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2">
             {["A4", "A3", "Letter", "Legal"].map((size) => (
-              <div key={size} className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+              <div key={size} className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
                 <span className="text-sm">{size}</span>
                 <Toggle
                   checked={settings.paper_format_visibility[size] !== false}
@@ -131,7 +131,7 @@ export default function CustomerPortalTab() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+        <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
           <div>
             <p className="font-medium text-sm">Allow customers to request stapling</p>
             <p className="text-xs text-base-500">Purely informational — printing must still be arranged manually</p>

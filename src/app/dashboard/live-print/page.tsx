@@ -88,14 +88,14 @@ export default function LivePrintPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 max-w-2xl">
         <div className="card p-4">
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between gap-3 mb-1">
             <p className="text-xs text-base-500 uppercase tracking-wide">Working printers</p>
             <Wifi size={14} className="text-success" />
           </div>
           <p className="text-2xl font-bold">{workingPrinters}</p>
         </div>
         <div className="card p-4">
-          <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center justify-between gap-3 mb-1">
             <p className="text-xs text-base-500 uppercase tracking-wide">Printing now</p>
             <PrinterIcon size={14} className="text-accent-400" />
           </div>
@@ -110,7 +110,7 @@ export default function LivePrintPage() {
       {loading ? (
         <p className="text-base-500 text-sm">Loading...</p>
       ) : filteredJobs.length === 0 ? (
-        <div className="card p-10 text-center text-base-500 max-w-2xl flex flex-col items-center gap-2">
+        <div className="card p-4 sm:p-6 sm:p-10 text-center text-base-500 max-w-2xl flex flex-col items-center gap-2">
           <PrinterIcon size={26} className="text-base-600" />
           <p className="font-semibold text-ink">
             {jobs.length === 0 ? "No working printers online" : "No jobs match your filters"}
@@ -118,8 +118,8 @@ export default function LivePrintPage() {
           <p className="text-sm">Start the local agent or check Business Setup → Printers.</p>
         </div>
       ) : (
-        <div className="card overflow-hidden max-w-2xl">
-          <table className="w-full text-sm">
+        <div className="card overflow-hidden overflow-x-auto max-w-2xl">
+          <table className="w-full text-sm min-w-[520px]">
             <thead className="text-left text-base-500 border-b border-base-700/60">
               <tr>
                 <th className="px-4 py-3 font-medium">Order</th>

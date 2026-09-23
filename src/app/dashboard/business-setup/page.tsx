@@ -55,7 +55,7 @@ export default function BusinessSetupPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-6 overflow-x-auto pb-1">
+      <div className="flex flex-nowrap md:flex-wrap gap-2 mb-6 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
         {TABS.map((t) => {
           const Icon = t.icon;
           return (

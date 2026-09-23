@@ -125,7 +125,7 @@ function OrdersPageInner() {
           <h1 className="text-2xl font-bold capitalize">{tab === "all" ? "All Orders" : `${tab.replace("_", " ")} Orders`}</h1>
           <p className="text-base-500 text-sm mt-1">{TAB_DESCRIPTIONS[tab]}</p>
         </div>
-        <div className="flex gap-6 text-right">
+        <div className="flex gap-4 sm:gap-6 sm:text-right w-full sm:w-auto justify-between sm:justify-start">
           <div>
             <p className="text-xl font-bold">{totalCount}</p>
             <p className="text-xs text-base-500 uppercase tracking-wide">Orders</p>
@@ -141,7 +141,7 @@ function OrdersPageInner() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-nowrap md:flex-wrap gap-2 mb-4 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -158,13 +158,13 @@ function OrdersPageInner() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search order ID, name, phone or file..."
-        className="input-field max-w-sm mb-6"
+        className="input-field w-full sm:max-w-sm mb-6"
       />
 
       {loading ? (
         <p className="text-base-500 text-sm">Loading...</p>
       ) : orders.length === 0 ? (
-        <div className="card p-14 text-center text-base-500 flex flex-col items-center gap-3">
+        <div className="card p-8 sm:p-14 text-center text-base-500 flex flex-col items-center gap-3">
           {tab === "pending" ? <Clock size={28} className="text-base-600" /> : <InboxIcon size={28} className="text-base-600" />}
           <div>
             <p className="font-semibold text-ink">No {tab === "all" ? "" : tab.replace("_", " ")} orders right now</p>
@@ -173,7 +173,7 @@ function OrdersPageInner() {
         </div>
       ) : (
         <div className="card overflow-hidden overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[760px]">
             <thead className="text-left text-base-500 border-b border-base-700/60">
               <tr>
                 <th className="px-4 py-3 font-medium">Order</th>

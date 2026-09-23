@@ -11,18 +11,18 @@ const QUEUE_STEPS = ["1. Scan QR", "2. Upload", "3. Configure", "4. Pay", "5. Qu
 
 export default function Hero() {
   return (
-    <section className="max-w-7xl mx-auto px-6 pt-16 pb-20 grid lg:grid-cols-2 gap-12 items-center">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-14 sm:pb-20 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
       <div>
         <span className="badge bg-success/10 text-success border border-success/30 mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-success" /> Print automation for modern shops
         </span>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-6">
           Print automation software for{" "}
           <span className="bg-gradient-to-r from-accent-500 to-success bg-clip-text text-transparent">
             faster print shops
           </span>
         </h1>
-        <p className="text-base-500 text-lg mb-8 max-w-lg">
+        <p className="text-base-500 text-base sm:text-lg mb-8 max-w-lg">
           Receive documents over QR and WhatsApp, collect exact print settings, calculate pricing
           automatically, and send confirmed orders straight to your printer — all from one workspace.
         </p>
@@ -59,7 +59,7 @@ export default function Hero() {
 
       <div>
         <div className="rounded-2xl bg-[#0d0e1a] border border-base-700 overflow-hidden shadow-2xl">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+          <div className="flex flex-wrap items-center justify-between gap-2 px-4 sm:px-5 py-4 border-b border-white/10">
             <div className="flex items-center gap-2.5 text-white">
               <span className="w-8 h-8 rounded-lg bg-accent-500 flex items-center justify-center">
                 <Printer size={15} />
@@ -71,7 +71,7 @@ export default function Hero() {
             </span>
           </div>
 
-          <div className="p-5 grid grid-cols-2 gap-4">
+          <div className="p-4 sm:p-5 grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 sm:gap-4">
             <div className="bg-white rounded-xl p-5 flex flex-col items-center text-center">
               <span className="w-12 h-12 rounded-full bg-success/10 text-success flex items-center justify-center mb-3">
                 <CheckCircle2 size={22} />
@@ -107,7 +107,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
           <div className="card p-4">
             <p className="font-semibold text-sm">QR + WhatsApp</p>
             <p className="text-xs text-base-500">Order intake</p>

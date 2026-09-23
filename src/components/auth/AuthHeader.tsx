@@ -4,7 +4,7 @@ import { ArrowLeft, Printer } from "lucide-react";
 export default function AuthHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-base-700/60 bg-base-950/90 backdrop-blur">
-      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
         <Link
           href="/"
           className="flex items-center gap-1.5 text-sm text-base-500 hover:text-ink transition-colors"

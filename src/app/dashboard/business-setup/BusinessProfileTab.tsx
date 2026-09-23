@@ -92,9 +92,9 @@ export default function BusinessProfileTab() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <h3 className="font-semibold mb-4">Business Profile &amp; Capabilities</h3>
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="text-sm text-base-500 block mb-1.5">Shop Name</label>
             <input
@@ -116,7 +116,7 @@ export default function BusinessProfileTab() {
         <p className="text-xs text-base-500 uppercase tracking-wide mb-2">Popular services</p>
         <div className="space-y-2">
           {CAPABILITY_GROUPS.map((group, i) => (
-            <div key={i} className="grid grid-cols-3 gap-2">
+            <div key={i} className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 gap-2">
               {group.map((item) => (
                 <label
                   key={item.key}
@@ -137,7 +137,7 @@ export default function BusinessProfileTab() {
         </div>
 
         <div className={`mt-5 rounded-xl border p-4 ${advancedEnabled ? "border-accent-500" : "border-base-700"}`}>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div>
               <p className="font-semibold text-sm">Advanced services</p>
               <p className="text-xs text-base-500">Enable only capabilities your shop can fulfil.</p>
@@ -147,7 +147,7 @@ export default function BusinessProfileTab() {
           {advancedEnabled && (
             <div className="space-y-2 mt-4">
               {ADVANCED_CAPABILITY_GROUPS.map((group, i) => (
-                <div key={i} className="grid grid-cols-3 gap-2">
+                <div key={i} className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 gap-2">
                   {group.map((item) => (
                     <label
                       key={item.key}
@@ -168,7 +168,7 @@ export default function BusinessProfileTab() {
         </div>
 
         <div className={`mt-3 rounded-xl border p-4 ${physicalEnabled ? "border-warning" : "border-base-700"}`}>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div>
               <p className="font-semibold text-sm">Physical services</p>
               <p className="text-xs text-base-500">Media loading and finishing performed by printer hardware or shop staff.</p>
@@ -178,7 +178,7 @@ export default function BusinessProfileTab() {
           {physicalEnabled && (
             <div className="space-y-2 mt-4">
               {PHYSICAL_CAPABILITY_GROUPS.map((group, i) => (
-                <div key={i} className="grid grid-cols-3 gap-2">
+                <div key={i} className="grid grid-cols-1 min-[400px]:grid-cols-2 md:grid-cols-3 gap-2">
                   {group.map((item) => (
                     <label
                       key={item.key}
@@ -199,9 +199,9 @@ export default function BusinessProfileTab() {
         </div>
       </div>
 
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <h3 className="font-semibold mb-4">Owner &amp; Login Details</h3>
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="text-sm text-base-500 block mb-1.5">Owner Name</label>
             <input
@@ -223,7 +223,7 @@ export default function BusinessProfileTab() {
             className="input-field"
           />
         </div>
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div>
             <label className="text-sm text-base-500 block mb-1.5">City</label>
             <input value={profile.city || ""} onChange={(e) => update("city", e.target.value)} className="input-field" />
@@ -241,7 +241,7 @@ export default function BusinessProfileTab() {
           <label className="text-sm text-base-500 block mb-1.5">GSTIN (optional)</label>
           <input value={profile.gstin || ""} onChange={(e) => update("gstin", e.target.value)} className="input-field" />
         </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="text-sm text-base-500 block mb-1.5">Current Password</label>
             <input

@@ -78,7 +78,7 @@ export default function CreditsPage() {
       <h1 className="text-2xl font-bold mb-1">Conversion credits</h1>
       <p className="text-base-500 text-sm mb-6">Credits are used by document conversion during your current billing period.</p>
 
-      <div className="grid grid-cols-4 gap-4 mb-6 max-w-3xl">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 max-w-3xl">
         <div className="card p-4">
           <p className="text-xs text-base-500">Remaining</p>
           <p className="text-2xl font-bold">{balance.remaining}</p>
@@ -97,11 +97,11 @@ export default function CreditsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-5 max-w-3xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl">
         <div className="card p-5">
           <h3 className="font-semibold mb-1">Add more credits</h3>
           <p className="text-base-500 text-sm mb-4">₹{1} per credit</p>
-          <div className="flex gap-2 mb-3">
+          <div className="flex flex-wrap gap-2 mb-3">
             {QUICK_AMOUNTS.map((amt) => (
               <button
                 key={amt}
@@ -120,7 +120,7 @@ export default function CreditsPage() {
             onChange={(e) => setQuantity(Number(e.target.value))}
             className="input-field mb-3"
           />
-          <div className="flex items-center justify-between text-sm mb-4">
+          <div className="flex items-center justify-between gap-3 text-sm mb-4">
             <span className="text-base-500">Payment total</span>
             <span className="font-bold">₹{quantity.toFixed(2)}</span>
           </div>

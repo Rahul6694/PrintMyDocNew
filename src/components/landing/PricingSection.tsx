@@ -6,17 +6,17 @@ const PLAN_ORDER = ["basic", "standard", "premium"] as const;
 
 export default function PricingSection() {
   return (
-    <section id="pricing" className="max-w-6xl mx-auto px-6 py-20">
-      <div className="text-center max-w-xl mx-auto mb-12">
+    <section id="pricing" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
         <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">Pricing</span>
-        <h2 className="text-3xl md:text-4xl font-bold mb-3">Choose your PrintMyDoc plan</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Choose your PrintMyDoc plan</h2>
         <p className="text-base-500">
           Every plan includes the full dashboard — QR ordering, WhatsApp, Employees, Referrals, and Business
           Setup. The only difference is your monthly order limit.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+      <div className="grid md:grid-cols-3 gap-6 md:gap-5 max-w-md md:max-w-4xl mx-auto">
         {PLAN_ORDER.map((id) => {
           const plan = PLANS[id];
           const isPopular = id === "standard";

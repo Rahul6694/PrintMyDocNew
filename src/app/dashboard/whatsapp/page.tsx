@@ -128,8 +128,8 @@ export default function WhatsAppSetupPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
-        <div className="card p-6 opacity-60">
-          <div className="flex items-start justify-between mb-3">
+        <div className="card p-4 sm:p-6 opacity-60">
+          <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <span className="badge bg-base-700 text-base-500 mb-2">Option 1</span>
               <h3 className="font-semibold">Quick Scan Login</h3>
@@ -241,7 +241,7 @@ export default function WhatsAppSetupPage() {
       {error && <p className="text-danger text-sm">{error}</p>}
 
       {isConnected && (
-        <div className="card p-6">
+        <div className="card p-4 sm:p-6">
           <h3 className="font-semibold mb-1">Test connection</h3>
           <p className="text-base-500 text-sm mb-4">
             Sends a real WhatsApp message via Meta&apos;s API to confirm login still works.
@@ -260,7 +260,7 @@ export default function WhatsAppSetupPage() {
         </div>
       )}
 
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <h3 className="font-semibold mb-2">Webhook URL</h3>
         <p className="text-base-500 text-sm mb-2">
           Add this URL in your Meta app&apos;s WhatsApp → Configuration → Webhook, with the verify

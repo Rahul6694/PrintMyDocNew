@@ -114,7 +114,7 @@ export default function TrainBotPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5 items-start">
-        <div className="card p-6">
+        <div className="card p-4 sm:p-6">
           <div className="flex items-center gap-2 mb-5">
             <span className="w-9 h-9 rounded-lg bg-accent-500/10 text-accent-500 flex items-center justify-center">
               <Bot size={17} />
@@ -136,7 +136,7 @@ export default function TrainBotPage() {
 
           {tab === "rules" ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+              <div className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
                 <div>
                   <p className="text-sm font-medium">Bot Status</p>
                   <p className="text-xs text-base-500">
@@ -215,7 +215,7 @@ export default function TrainBotPage() {
               ) : (
                 <div className="space-y-2">
                   {qaPairs.map((qa) => (
-                    <div key={qa.id} className="flex items-center justify-between border border-base-700 rounded-lg px-4 py-3">
+                    <div key={qa.id} className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
                       <div>
                         <p className="text-sm font-medium">&quot;{qa.question}&quot;</p>
                         <p className="text-xs text-base-500">{qa.answer}</p>
@@ -232,7 +232,7 @@ export default function TrainBotPage() {
         </div>
 
         <div className="card p-4 flex flex-col h-[560px]">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between gap-3 mb-3">
             <div>
               <p className="font-semibold text-sm">Live Test Preview</p>
               <p className="text-xs text-base-500">{qaPairs.length} instant Q&amp;A pairs active</p>

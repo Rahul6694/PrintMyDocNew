@@ -107,8 +107,8 @@ export default function DiscountsTab() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <div className="card p-6">
-        <div className="flex items-center justify-between mb-1">
+      <div className="card p-4 sm:p-6">
+        <div className="flex items-center justify-between gap-3 mb-1">
           <div>
             <h3 className="font-semibold">High-Value Order Discount</h3>
             <p className="text-base-500 text-sm">Offer lower per-page pricing once an order crosses a set amount</p>
@@ -132,13 +132,13 @@ export default function DiscountsTab() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {knownConfigs.map((key) => {
             const [colorMode, sided] = key.split("|");
             const rate = bulkByKey.get(key) || { id: 0, paper_size: "A4", color_mode: colorMode, sided, enabled: 0, discounted_price: null };
             return (
               <div key={key} className="border border-base-700 rounded-lg p-3">
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between gap-3 mb-2">
                   <p className="text-xs font-medium">{CONFIG_LABEL[key]}</p>
                   <button
                     onClick={() => saveBulkRate({ ...rate, paper_size: "A4" }, !rate.enabled, rate.discounted_price || "")}
@@ -167,8 +167,8 @@ export default function DiscountsTab() {
         </div>
       </div>
 
-      <div className="card p-6">
-        <div className="flex items-center justify-between mb-1">
+      <div className="card p-4 sm:p-6">
+        <div className="flex items-center justify-between gap-3 mb-1">
           <div>
             <h3 className="font-semibold">Additional Copy Discount</h3>
             <p className="text-base-500 text-sm">Copy 1 uses the normal price; copies 2+ use the rate below</p>
@@ -178,7 +178,7 @@ export default function DiscountsTab() {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
           {knownConfigs.map((key) => {
             const [colorMode, sided] = key.split("|");
             const rate = copyByKey.get(key) || { id: 0, paper_size: "A4", color_mode: colorMode, sided, discounted_price: null };

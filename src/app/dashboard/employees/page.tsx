@@ -71,7 +71,7 @@ export default function EmployeesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold">Employees</h1>
           <p className="text-base-500 text-sm">Assign operational access to your staff</p>
@@ -83,11 +83,11 @@ export default function EmployeesPage() {
 
       {showForm && (
         <form onSubmit={addEmployee} className="card p-5 mb-6 max-w-lg space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" className="input-field" />
             <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="input-field" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
               required
               type="password"
@@ -111,14 +111,14 @@ export default function EmployeesPage() {
       {loading ? (
         <p className="text-base-500 text-sm">Loading...</p>
       ) : employees.length === 0 ? (
-        <div className="card p-10 text-center text-base-500 flex flex-col items-center gap-2">
+        <div className="card p-4 sm:p-6 sm:p-10 text-center text-base-500 flex flex-col items-center gap-2">
           <ShieldCheck size={28} className="text-base-600" />
           <p className="font-semibold text-ink">No employee accounts yet</p>
           <p className="text-sm">The merchant owner keeps full access.</p>
         </div>
       ) : (
-        <div className="card overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="card overflow-hidden overflow-x-auto">
+          <table className="w-full text-sm min-w-[560px]">
             <thead className="text-left text-base-500 border-b border-base-700/60">
               <tr>
                 <th className="px-4 py-3 font-medium">Name</th>
