@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import {
-  CheckCircle2,
-  Circle,
-  RotateCw,
-  KeyRound,
-  Cpu,
   Activity,
-  FlaskConical,
   AlertTriangle,
-  Monitor,
-  Download,
+  CheckCircle2,
   ChevronDown,
+  Circle,
+  Cpu,
+  Download,
+  FlaskConical,
+  KeyRound,
+  Monitor,
+  RotateCw,
   ShieldCheck,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 type Agent = { id: number; status: string; agent_version: string | null; last_ping_at: string | null } | null;
 type Printer = { id: number; name: string; is_default: number; paper_tray: string; status: string };
@@ -28,10 +28,7 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-// Best-effort client-side OS/arch detection so we can pre-select the right download.
-// Browsers deliberately obscure exact OS version and (on non-Chromium/UA-CH browsers)
-// CPU architecture, so this is a starting guess — the "download for another platform"
-// list below lets people override it, same as the underlying UA-CH spec recommends.
+
 async function detectPlatform(): Promise<{ platform: string; arch: string | null }> {
   if (typeof navigator === "undefined") return { platform: "unknown", arch: null };
   const ua = navigator.userAgent;

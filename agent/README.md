@@ -57,7 +57,10 @@ running this for a new release — the previous version's files are left in plac
   in System Settings / CUPS.
 - **Windows**: there's no built-in command to silently print an arbitrary file, so the
   agent shells out to [SumatraPDF](https://www.sumatrapdfreader.org/) in `-print-to`
-  mode. Install it and set `SUMATRA_PATH` in `.env` if it's not on your `PATH`.
+  mode. If Sumatra isn't already installed, the agent downloads the official portable
+  build to `%USERPROFILE%\.printmydoc\SumatraPDF.exe` on the first print job (set
+  `SUMATRA_PATH` to use a specific copy instead). Plain `.txt` files are printed with
+  PowerShell's built-in `Out-Printer` and don't need Sumatra.
 - Duplex ("back-to-back") and color options are applied on macOS/Linux via CUPS
   options; on Windows they follow whatever the printer's own default is currently set
   to, since Sumatra's silent-print mode doesn't expose them.
