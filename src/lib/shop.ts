@@ -1,6 +1,7 @@
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "./db";
 import type { Sided, ColorMode } from "./price";
+import { allowedColorModes } from "./capabilities";
 
 export type PublicPricingRule = {
   paper_size: string;
@@ -80,9 +81,15 @@ export async function getPublicShopBySlug(slug: string) {
     [shop.id]
   );
 
+  const [capRows] = await pool.query<RowDataPacket[]>(
+    "SELECT capabilities FROM shop_capabilities WHERE shop_id = ? LIMIT 1",
+    [shop.id]
+  );
+  const colorModes = allowedColorModes(capRows[0]?.capabilities, portalRows[0]?.service_toggles);
+
   return {
     shop: shop as { id: number; name: string; slug: string },
-    pricing: rules as PublicPricingRule[],
+    pricing: (rules as PublicPricingRule[]).filter((r) => colorModes.includes(r.color_mode)),
     portal: (portalRows[0] as PublicPortalSettings) || DEFAULT_PORTAL_SETTINGS,
     settings: (settingsRows[0] as PublicShopSettings) || DEFAULT_SHOP_SETTINGS,
   };

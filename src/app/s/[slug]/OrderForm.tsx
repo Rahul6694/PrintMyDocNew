@@ -62,12 +62,8 @@ export default function OrderForm({
     return filtered.length > 0 ? filtered : all;
   }, [pricing, portal.service_toggles]);
 
-  const colorOptions = useMemo(() => {
-    const all = [...new Set(pricing.map((p) => p.color_mode))];
-    const toggles = portal.service_toggles || {};
-    const filtered = all.filter((c) => toggles[c] !== false);
-    return filtered.length > 0 ? filtered : all;
-  }, [pricing, portal.service_toggles]);
+  // Pricing arrives pre-filtered to the colour modes the shop's printer supports (see getPublicShopBySlug).
+  const colorOptions = useMemo(() => [...new Set(pricing.map((p) => p.color_mode))], [pricing]);
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -301,7 +297,7 @@ export default function OrderForm({
           <Printer size={14} className="shrink-0" />
           {status === "placed"
             ? "Pay the shop directly when you pick up your prints."
-            : "The shop will print your document and notify you when it's ready for pickup."}
+            : "Your document has been sent to the printer automatically — collect it from the shop."}
         </p>
       </div>
     );

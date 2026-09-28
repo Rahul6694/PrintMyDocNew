@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "@/lib/db";
+import { autoPrintPaidOrder } from "@/lib/printQueue";
 
 // Source of truth for payment fulfillment — configure this URL in the Razorpay
 // dashboard (Settings → Webhooks) so paid orders enter the print queue even if
@@ -49,10 +50,7 @@ export async function POST(req: NextRequest) {
         "UPDATE payments SET status = 'paid', razorpay_payment_id = ? WHERE id = ?",
         [paymentEntity.id, payment.id]
       );
-      await pool.query(
-        "UPDATE orders SET status = 'pending' WHERE id = ? AND status = 'pending_payment'",
-        [payment.order_id]
-      );
+      await autoPrintPaidOrder(payment.order_id);
     }
   }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "@/lib/db";
 import { getCurrentShop } from "@/lib/auth";
+import { queuePrintJob } from "@/lib/printQueue";
 
 const ALLOWED_TRANSITIONS: Record<string, string[]> = {
   pending: ["processing", "rejected"],
@@ -38,17 +39,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     shop.shopId,
   ]);
 
-  // Entering "printing" hands the job to whichever printer the local agent
-  // reports as default — the agent picks it up on its next poll.
+  // Entering "printing" hands the job to the default printer via the local agent.
   if (nextStatus === "printing") {
-    const [defaultPrinterRows] = await pool.query<RowDataPacket[]>(
-      "SELECT id FROM printers WHERE shop_id = ? AND is_default = 1 LIMIT 1",
-      [shop.shopId]
-    );
-    await pool.query(
-      "INSERT INTO print_jobs (order_id, shop_id, printer_id, status) VALUES (?, ?, ?, 'queued')",
-      [params.id, shop.shopId, defaultPrinterRows[0]?.id || null]
-    );
+    await queuePrintJob(params.id, shop.shopId);
   }
 
   return NextResponse.json({ ok: true });

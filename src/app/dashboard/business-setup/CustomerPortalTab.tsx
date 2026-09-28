@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Printer as PrinterIcon, FileText } from "lucide-react";
+import { allowedColorModes } from "@/lib/capabilities";
 
 type Settings = {
   show_customer_details_page: number;
@@ -32,6 +33,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
 export default function CustomerPortalTab() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [shopName, setShopName] = useState("Your Shop");
+  const [capabilities, setCapabilities] = useState<unknown>(null);
 
   useEffect(() => {
     fetch("/api/business/customer-portal")
@@ -39,7 +41,10 @@ export default function CustomerPortalTab() {
       .then((data) => setSettings(data.settings));
     fetch("/api/business/profile")
       .then((r) => r.json())
-      .then((data) => setShopName(data.profile?.name || "Your Shop"));
+      .then((data) => {
+        setShopName(data.profile?.name || "Your Shop");
+        setCapabilities(data.capabilities);
+      });
   }, []);
 
   async function persist(next: Settings) {
@@ -53,7 +58,12 @@ export default function CustomerPortalTab() {
 
   if (!settings) return <p className="text-base-500 text-sm">Loading...</p>;
 
-  const enabledColorModes = SERVICE_ROWS.filter((r) => ["black_white", "color"].includes(r.key) && settings.service_toggles[r.key] !== false);
+  // Colour modes are capped by what the printer supports (Business Profile → capabilities).
+  const printerColorKeys: string[] = allowedColorModes(capabilities, {}).map((m) => (m === "bw" ? "black_white" : "color"));
+  const isUnsupportedColor = (key: string) => ["black_white", "color"].includes(key) && !printerColorKeys.includes(key);
+  const enabledColorModes = SERVICE_ROWS.filter(
+    (r) => ["black_white", "color"].includes(r.key) && !isUnsupportedColor(r.key) && settings.service_toggles[r.key] !== false
+  );
   const enabledSided = SERVICE_ROWS.filter(
     (r) => !["black_white", "color"].includes(r.key) && settings.service_toggles[r.key] !== false
   );
@@ -97,15 +107,19 @@ export default function CustomerPortalTab() {
             {SERVICE_ROWS.map((row) => (
               <div key={row.key} className="flex items-center justify-between gap-3 border border-base-700 rounded-lg px-4 py-3">
                 <span className="text-sm">{row.label}</span>
-                <Toggle
-                  checked={settings.service_toggles[row.key] !== false}
-                  onChange={(v) =>
-                    persist({
-                      ...settings,
-                      service_toggles: { ...settings.service_toggles, [row.key]: v },
-                    })
-                  }
-                />
+                {isUnsupportedColor(row.key) ? (
+                  <span className="text-xs text-base-500 text-right">Turned off in Business Profile</span>
+                ) : (
+                  <Toggle
+                    checked={settings.service_toggles[row.key] !== false}
+                    onChange={(v) =>
+                      persist({
+                        ...settings,
+                        service_toggles: { ...settings.service_toggles, [row.key]: v },
+                      })
+                    }
+                  />
+                )}
               </div>
             ))}
           </div>

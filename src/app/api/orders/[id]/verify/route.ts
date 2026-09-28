@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "@/lib/db";
+import { autoPrintPaidOrder } from "@/lib/printQueue";
 
 // Verifies the Razorpay checkout signature server-side. This is a convenience
 // path for immediate UI feedback — the payments.status webhook (see webhook/route.ts)
@@ -37,9 +38,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       "UPDATE payments SET status = 'paid', razorpay_payment_id = ?, razorpay_signature = ? WHERE id = ?",
       [razorpay_payment_id, razorpay_signature, payment.id]
     );
-    await pool.query("UPDATE orders SET status = 'pending' WHERE id = ? AND status = 'pending_payment'", [
-      params.id,
-    ]);
+    await autoPrintPaidOrder(params.id);
   }
 
   return NextResponse.json({ ok: true });

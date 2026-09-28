@@ -117,7 +117,7 @@ async function printTextFileWindows({ printerName, filePath, copies }) {
 // arbitrary-file printing, so it shells out to SumatraPDF (auto-located or
 // downloaded — see resolveSumatraPath) and copies/duplex must be set as the
 // printer's default.
-async function printFile({ printerName, filePath, copies, sided, paperTray }) {
+async function printFile({ printerName, filePath, copies, sided, paperTray, colorMode }) {
   if (IS_WINDOWS) {
     if (path.extname(filePath).toLowerCase() === ".txt") {
       await printTextFileWindows({ printerName, filePath, copies });
@@ -126,6 +126,9 @@ async function printFile({ printerName, filePath, copies, sided, paperTray }) {
     // Sumatra's silent-print mode has no tray-select flag — tray follows the printer's own default on Windows.
     const sumatraPath = await resolveSumatraPath();
     const args = ["-print-to", printerName, "-silent"];
+    // Set colour explicitly both ways so the printer's own default can't override the order.
+    if (colorMode === "bw") args.push("-print-settings", "monochrome");
+    else if (colorMode === "color") args.push("-print-settings", "color");
     for (let i = 0; i < copies; i++) args.push(filePath);
     await execFileAsync(sumatraPath, args);
     return;
@@ -134,6 +137,12 @@ async function printFile({ printerName, filePath, copies, sided, paperTray }) {
   const args = ["-d", printerName, "-n", String(copies)];
   if (sided === "back_to_back_auto" || sided === "back_to_back_manual") {
     args.push("-o", "sides=two-sided-long-edge");
+  }
+  // Both spellings: IPP-standard option plus the common CUPS driver option.
+  if (colorMode === "bw") {
+    args.push("-o", "print-color-mode=monochrome", "-o", "ColorModel=Gray");
+  } else if (colorMode === "color") {
+    args.push("-o", "print-color-mode=color", "-o", "ColorModel=RGB");
   }
   if (paperTray && paperTray !== "auto") {
     // Best-effort: CUPS' InputSlot names vary by driver, so this may be a no-op on some printers.

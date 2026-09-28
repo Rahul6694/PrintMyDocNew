@@ -105,7 +105,7 @@ async function handleJob(job) {
     if (!printerName) throw new Error("no default printer set for this shop");
 
     console.log(`[job ${job.id}] printing to ${printerName} (${job.copies}x)...`);
-    await printFile({ printerName, filePath: tmpFile, copies: job.copies, sided: job.sided, paperTray: job.paper_tray });
+    await printFile({ printerName, filePath: tmpFile, copies: job.copies, sided: job.sided, paperTray: job.paper_tray, colorMode: job.color_mode });
 
     await reportResult(job.id, "completed");
     console.log(`[job ${job.id}] done`);

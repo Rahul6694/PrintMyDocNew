@@ -131,3 +131,28 @@ export const PHYSICAL_CAPABILITY_GROUPS: { key: string; label: string }[][] = [
     { key: "output_bin_selection", label: "Output-bin selection" },
   ],
 ];
+
+// Colour modes a customer may order: the shop's printer capability (Business Profile)
+// must allow it AND the Customer Portal toggle must not hide it.
+const COLOR_MODE_KEYS = { bw: "black_white", color: "color" } as const;
+
+function parseJsonObject(value: unknown): Record<string, boolean> {
+  if (!value) return {};
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return {};
+    }
+  }
+  return value as Record<string, boolean>;
+}
+
+export function allowedColorModes(capabilities: unknown, serviceToggles: unknown): ("bw" | "color")[] {
+  const caps = { ...DEFAULT_CAPABILITIES, ...parseJsonObject(capabilities) };
+  const toggles = parseJsonObject(serviceToggles);
+  return (Object.keys(COLOR_MODE_KEYS) as ("bw" | "color")[]).filter((mode) => {
+    const key = COLOR_MODE_KEYS[mode];
+    return caps[key] === true && toggles[key] !== false;
+  });
+}

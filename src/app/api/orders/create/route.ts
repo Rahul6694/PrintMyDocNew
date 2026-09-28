@@ -9,6 +9,7 @@ import { getRazorpay } from "@/lib/razorpay";
 import { canAcceptNewOrder } from "@/lib/subscription";
 import { consumeCredit } from "@/lib/credits";
 import { sendTemplatedEmail } from "@/lib/mailer";
+import { allowedColorModes } from "@/lib/capabilities";
 
 const ALLOWED_EXTENSIONS = [".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png"];
 const DEFAULT_MAX_FILE_MB = 25;
@@ -56,9 +57,12 @@ export async function POST(req: NextRequest) {
 
   const [settingsRows] = await pool.query<RowDataPacket[]>(
     `SELECT accept_online_payments, allow_manual_payment, min_order_amount, max_file_size_mb,
-            require_name, require_mobile
-     FROM shop_settings LEFT JOIN customer_portal_settings USING (shop_id)
-     WHERE shop_id = ? LIMIT 1`,
+            require_name, require_mobile, service_toggles, capabilities
+     FROM shops s
+     LEFT JOIN shop_settings ss ON ss.shop_id = s.id
+     LEFT JOIN customer_portal_settings cps ON cps.shop_id = s.id
+     LEFT JOIN shop_capabilities sc ON sc.shop_id = s.id
+     WHERE s.id = ? LIMIT 1`,
     [shop.id]
   );
   const settings = settingsRows[0];
@@ -72,11 +76,18 @@ export async function POST(req: NextRequest) {
   if (settings?.require_mobile !== 0 && !customerPhone) {
     return NextResponse.json({ error: "Phone number is required" }, { status: 400 });
   }
-  if (paymentMethod === "razorpay" && settings && !settings.accept_online_payments) {
+  if (paymentMethod === "razorpay" && settings?.accept_online_payments === 0) {
     return NextResponse.json({ error: "Online payments are not enabled for this shop" }, { status: 400 });
   }
-  if (paymentMethod === "manual" && settings && !settings.allow_manual_payment) {
+  if (paymentMethod === "manual" && settings?.allow_manual_payment === 0) {
     return NextResponse.json({ error: "Manual payment is not accepted by this shop" }, { status: 400 });
+  }
+
+  if (!allowedColorModes(settings?.capabilities, settings?.service_toggles).includes(colorMode)) {
+    return NextResponse.json(
+      { error: colorMode === "color" ? "This shop does not offer colour printing" : "This shop does not offer black & white printing" },
+      { status: 400 }
+    );
   }
 
   const gate = await canAcceptNewOrder(shop.id);
