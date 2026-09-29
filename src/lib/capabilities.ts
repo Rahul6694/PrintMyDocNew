@@ -1,6 +1,6 @@
 export const DEFAULT_CAPABILITIES: Record<string, boolean> = {
   black_white: true,
-  color: false,
+  color: true,
   single_sided: true,
   back_to_back_auto: false,
   back_to_back_manual: true,
