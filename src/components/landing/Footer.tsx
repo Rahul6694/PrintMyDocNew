@@ -4,18 +4,18 @@ const COLUMNS = [
   {
     title: "Product",
     links: [
-      { href: "#product", label: "Print automation" },
-      { href: "#whatsapp", label: "WhatsApp printing" },
-      { href: "#qr-orders", label: "QR ordering" },
+      { href: "/#product", label: "Print automation" },
+      { href: "/#whatsapp", label: "WhatsApp printing" },
+      { href: "/#qr-orders", label: "QR ordering" },
     ],
   },
   {
     title: "Company & help",
     links: [
-      { href: "#how-it-works", label: "How it works" },
-      { href: "#pricing", label: "Pricing" },
-      { href: "#faq", label: "FAQ" },
-      { href: "#contact", label: "Contact" },
+      { href: "/#how-it-works", label: "How it works" },
+      { href: "/#pricing", label: "Pricing" },
+      { href: "/#faq", label: "FAQ" },
+      { href: "/#contact", label: "Contact" },
     ],
   },
 ];
@@ -30,6 +30,17 @@ export default function Footer() {
           </p>
           <p className="text-sm text-base-500">The automated order and printer workflow for modern print shops.</p>
           <p className="text-xs text-base-500 mt-4">© {new Date().getFullYear()} PrintMyDoc.</p>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
+            <Link href="/privacy-policy" className="text-base-500 hover:text-ink transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms-and-conditions" className="text-base-500 hover:text-ink transition-colors">
+              Terms &amp; Conditions
+            </Link>
+            <Link href="/refund-policy" className="text-base-500 hover:text-ink transition-colors">
+              Refund Policy
+            </Link>
+          </div>
         </div>
         {COLUMNS.map((col) => (
           <div key={col.title}>

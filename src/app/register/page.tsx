@@ -257,6 +257,17 @@ function RegisterForm() {
               <button type="submit" disabled={loading} className="btn-primary w-full">
                 {loading ? "Continuing..." : "Continue to plan & payment →"}
               </button>
+              <p className="text-xs text-base-500 text-center">
+                By continuing, you agree to our{" "}
+                <Link href="/terms-and-conditions" target="_blank" className="text-accent-400 hover:underline">
+                  Terms &amp; Conditions
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy-policy" target="_blank" className="text-accent-400 hover:underline">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
             </form>
 
             <p className="text-center text-sm text-base-500 mt-5">
