@@ -10,7 +10,8 @@ export async function GET() {
   const pool = getPool();
   const [shops] = await pool.query<RowDataPacket[]>(
     `SELECT s.id, s.name, s.email, s.slug, s.phone, s.is_active, s.created_at,
-            sub.plan, sub.status AS subscription_status, sub.expires_at
+            s.last_login_at, s.login_count,
+            sub.plan, sub.status AS subscription_status, sub.started_at, sub.expires_at
      FROM shops s
      LEFT JOIN subscriptions sub ON sub.id = (
        SELECT id FROM subscriptions WHERE shop_id = s.id ORDER BY created_at DESC LIMIT 1

@@ -35,6 +35,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
+  await pool.query(
+    "UPDATE shops SET last_login_at = CURRENT_TIMESTAMP(3), login_count = login_count + 1 WHERE id = ?",
+    [shop.id]
+  );
+
   const token = signSession({ shopId: shop.id, email: shop.email, slug: shop.slug });
 
   const res = NextResponse.json({ ok: true, slug: shop.slug });

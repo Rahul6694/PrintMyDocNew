@@ -33,6 +33,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     razorpayOrderId: razorpayOrder.id,
     amount: price,
-    keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    keyId: process.env.RAZORPAY_KEY_ID,
   });
 }

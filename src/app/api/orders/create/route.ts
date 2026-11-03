@@ -190,7 +190,7 @@ export async function POST(req: NextRequest) {
     orderNumber,
     amount: price.total,
     razorpayOrderId: razorpayOrder.id,
-    keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    keyId: process.env.RAZORPAY_KEY_ID,
     paymentMethod: "razorpay",
   });
 }
