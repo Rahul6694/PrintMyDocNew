@@ -1,50 +1,39 @@
-import { QrCode, UploadCloud, SlidersHorizontal, CheckCircle2 } from "lucide-react";
+import HowItWorksVideo from "@/components/site/HowItWorksVideo";
+import { QrCode, UploadCloud, SlidersHorizontal, Printer } from "lucide-react";
 
 const STEPS = [
-  {
-    icon: QrCode,
-    step: "Step 1",
-    title: "Scan the QR",
-    desc: "Scan the shop's QR code with any camera app — no app install needed.",
-  },
-  {
-    icon: UploadCloud,
-    step: "Step 2",
-    title: "Upload your document",
-    desc: "Choose your file from your phone — no sign-up required.",
-  },
-  {
-    icon: SlidersHorizontal,
-    step: "Step 3",
-    title: "Set print preferences",
-    desc: "Pick copies, B&W or color, single or double-sided, and paper size.",
-  },
-  {
-    icon: CheckCircle2,
-    step: "Step 4",
-    title: "Pay & get your print",
-    desc: "Pay online or at the shop, then collect your print when it's ready.",
-  },
+  { icon: QrCode, title: "Scan karo", desc: "Customer counter par laga QR kisi bhi camera se scan kare — koi app install nahi." },
+  { icon: UploadCloud, title: "File upload karo", desc: "PDF, Word, photo — phone se seedha upload. Login ya sign-up ki zarurat nahi." },
+  { icon: SlidersHorizontal, title: "Settings chuno", desc: "Copies, B&W ya colour, single/double side, paper size — price turant dikhta hai." },
+  { icon: Printer, title: "Pay & auto print", desc: "Online UPI/card ya shop par cash. Payment hote hi print apne aap nikalta hai." },
 ];
 
 export default function HowItWorks() {
   return (
     <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-      <div className="text-center max-w-xl mx-auto mb-8 sm:mb-12">
-        <span className="badge bg-accent-500/10 text-accent-400 border border-accent-500/30 mb-4">How it works</span>
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3">Scan. Upload. Choose. Print.</h2>
-        <p className="text-base-500">Four simple steps take a customer from your shop QR to a confirmed print order.</p>
+      <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+        <span className="badge bg-yellow/25 text-ink border border-yellow mb-4">How it works</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3">
+          Sirf <span className="marker">4 steps</span> me print ready
+        </h2>
+        <p className="text-base-500">Shop QR se confirmed print order tak — bina counter par line lagaye.</p>
       </div>
 
+      <HowItWorksVideo className="max-w-4xl mx-auto mb-10 sm:mb-14" />
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {STEPS.map((s) => (
-          <div key={s.title} className="card p-6">
-            <span className="w-11 h-11 rounded-xl bg-accent-500/10 text-accent-500 flex items-center justify-center mb-4">
-              <s.icon size={20} />
+        {STEPS.map((s, i) => (
+          <div key={s.title} className="card p-6 relative overflow-hidden hover:-translate-y-1 transition-transform">
+            <span className="absolute -right-2 -top-4 font-display font-extrabold text-[88px] leading-none text-base-800 select-none">
+              {i + 1}
             </span>
-            <span className="badge bg-base-800 text-base-500 mb-2">{s.step}</span>
-            <h3 className="font-semibold mb-1">{s.title}</h3>
-            <p className="text-sm text-base-500 leading-relaxed">{s.desc}</p>
+            <span className="relative w-12 h-12 rounded-2xl bg-ink text-yellow flex items-center justify-center mb-4 shadow-pop">
+              <s.icon size={22} />
+            </span>
+            <h3 className="relative font-bold text-lg mb-1">
+              {i + 1}. {s.title}
+            </h3>
+            <p className="relative text-sm text-base-500 leading-relaxed">{s.desc}</p>
           </div>
         ))}
       </div>

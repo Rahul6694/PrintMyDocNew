@@ -13,7 +13,7 @@ import Footer from "@/components/landing/Footer";
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="bg-ambient min-h-screen">
       <LandingNav />
       <Hero />
       <HowItWorks />

@@ -1,69 +1,58 @@
 import Link from "next/link";
+import { BrandMark } from "./Nav";
+import { OpenDemoButton, OpenInquiryButton } from "@/components/site/SiteModals";
+import { SUPPORT_EMAIL, SUPPORT_HOURS, SUPPORT_PHONE } from "@/lib/site";
 
-const COLUMNS = [
-  {
-    title: "Product",
-    links: [
-      { href: "/#product", label: "Print automation" },
-      { href: "/#whatsapp", label: "WhatsApp printing" },
-      { href: "/#qr-orders", label: "QR ordering" },
-    ],
-  },
-  {
-    title: "Company & help",
-    links: [
-      { href: "/#how-it-works", label: "How it works" },
-      { href: "/#pricing", label: "Pricing" },
-      { href: "/#faq", label: "FAQ" },
-      { href: "/#contact", label: "Contact" },
-    ],
-  },
-];
+const linkCls = "text-sm text-white/65 hover:text-white transition-colors text-left";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-base-700/60">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
-        <div className="col-span-2 md:col-span-1">
-          <p className="text-lg font-bold tracking-tight mb-3">
-            Print<span className="text-accent-400">MyDoc</span>
-          </p>
-          <p className="text-sm text-base-500">The automated order and printer workflow for modern print shops.</p>
-          <p className="text-xs text-base-500 mt-4">© {new Date().getFullYear()} PrintMyDoc.</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs">
-            <Link href="/privacy-policy" className="text-base-500 hover:text-ink transition-colors">
-              Privacy Policy
+    <footer className="bg-dark text-white mt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-8">
+        <div className="grid grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-8 sm:gap-10">
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="text-lg inline-block mb-3" aria-label="PrintMyDoc home">
+              <BrandMark />
             </Link>
-            <Link href="/terms-and-conditions" className="text-base-500 hover:text-ink transition-colors">
-              Terms &amp; Conditions
-            </Link>
-            <Link href="/refund-policy" className="text-base-500 hover:text-ink transition-colors">
-              Refund Policy
-            </Link>
+            <p className="text-sm text-white/65 leading-relaxed max-w-xs">
+              Automated printing for cyber cafes and print shops — the customer scans your QR, and the print comes out on its own.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            <h4 className="font-display font-bold text-sm mb-1">Product</h4>
+            <Link href="/" className={linkCls}>Home</Link>
+            <Link href="/features" className={linkCls}>Features</Link>
+            <Link href="/setup-guide" className={linkCls}>How to Setup</Link>
+            <Link href="/#pricing" className={linkCls}>Pricing</Link>
+            <Link href="/#faq" className={linkCls}>FAQ</Link>
+            <OpenDemoButton className={linkCls}>Start Free Demo</OpenDemoButton>
+            <Link href="/partner" className={linkCls}>🤝 Partner Program</Link>
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            <h4 className="font-display font-bold text-sm mb-1">Legal</h4>
+            <Link href="/terms-and-conditions" className={linkCls}>Terms &amp; Conditions</Link>
+            <Link href="/privacy-policy" className={linkCls}>Privacy Policy</Link>
+            <Link href="/refund-policy" className={linkCls}>Refund Policy</Link>
+            <Link href="/disclaimer" className={linkCls}>Disclaimer</Link>
+            <Link href="/about" className={linkCls}>About</Link>
+          </div>
+
+          <div className="col-span-2 md:col-span-1 flex flex-col gap-2.5">
+            <h4 className="font-display font-bold text-sm mb-1">Contact</h4>
+            <a href={`mailto:${SUPPORT_EMAIL}`} className={`${linkCls} break-all`}>📧 {SUPPORT_EMAIL}</a>
+            {SUPPORT_PHONE && (
+              <a href={`tel:${SUPPORT_PHONE.replace(/\s/g, "")}`} className={linkCls}>📞 {SUPPORT_PHONE}</a>
+            )}
+            <span className="text-xs text-white/45 -mt-1">{SUPPORT_HOURS}</span>
+            <OpenInquiryButton className={linkCls}>💼 Business Inquiry</OpenInquiryButton>
+            <Link href="/login" className={linkCls}>🔑 Shop Owner Login</Link>
           </div>
         </div>
-        {COLUMNS.map((col) => (
-          <div key={col.title}>
-            <p className="font-semibold text-sm mb-3">{col.title}</p>
-            <div className="flex flex-col gap-2">
-              {col.links.map((l) => (
-                <a key={l.label} href={l.href} className="text-sm text-base-500 hover:text-ink transition-colors">
-                  {l.label}
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-        <div className="col-span-2 md:col-span-1">
-          <p className="font-semibold text-sm mb-3">Merchant</p>
-          <div className="flex flex-col gap-2 items-start">
-            <Link href="/login" className="text-sm text-accent-400 hover:underline">
-              Sign in →
-            </Link>
-            <Link href="/register" className="btn-primary text-sm mt-2">
-              Create account
-            </Link>
-          </div>
+
+        <div className="border-t border-white/10 mt-10 pt-6 text-center text-xs text-white/45">
+          © {new Date().getFullYear()} · Powered by <b className="text-white/70">PrintMyDoc</b> · All rights reserved.
         </div>
       </div>
     </footer>

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Script from "next/script";
 import type { PublicPricingRule, PublicPortalSettings, PublicShopSettings } from "@/lib/shop";
 import type { Sided } from "@/lib/price";
 import PhotoEditor, { paperAspect } from "@/components/PhotoEditor";
 import { composeSamePage, composeSeparatePages } from "@/lib/composePrintFile";
+import { openRazorpay } from "@/lib/razorpayCheckout";
 import {
   AlertCircle,
   CheckCircle2,
@@ -15,12 +15,6 @@ import {
   Printer,
   RefreshCcw,
 } from "lucide-react";
-
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
-  }
-}
 
 const SIDED_LABEL: Record<string, string> = {
   single: "Single-sided",
@@ -231,11 +225,11 @@ export default function OrderForm({
         return;
       }
 
-      const rzp = new window.Razorpay({
+      await openRazorpay({
         key: data.keyId,
         amount: Math.round(data.amount * 100),
         currency: "INR",
-        name: "PrintMyDoc",
+        name: settings.checkout_display_name || "PrintMyDoc",
         description: `Order ${data.orderNumber}`,
         order_id: data.razorpayOrderId,
         handler: async (response: {
@@ -260,11 +254,10 @@ export default function OrderForm({
         modal: {
           ondismiss: () => setStatus("idle"),
         },
-        theme: { color: "#f97316" },
-      });
-      rzp.open();
-    } catch {
-      setError("Something went wrong. Please try again.");
+        theme: { color: "#ff2e63" },
+      }, (msg) => { setError(msg); setStatus("error"); });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setStatus("error");
     }
   }
@@ -305,7 +298,6 @@ export default function OrderForm({
 
   return (
     <>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
 
       {editingSide === "front" && file && (
         <PhotoEditor

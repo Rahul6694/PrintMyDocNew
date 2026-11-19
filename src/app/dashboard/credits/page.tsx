@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Script from "next/script";
-
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
-  }
-}
+import { openRazorpay } from "@/lib/razorpayCheckout";
 
 type Balance = { included_in_plan: number; remaining: number; used: number; purchased: number; period_ends_at: string | null };
 
@@ -43,7 +37,8 @@ export default function CreditsPage() {
       return;
     }
 
-    const rzp = new window.Razorpay({
+    try {
+    await openRazorpay({
       key: data.keyId,
       amount: Math.round(data.amount * 100),
       currency: "INR",
@@ -65,16 +60,18 @@ export default function CreditsPage() {
         setProcessing(false);
       },
       modal: { ondismiss: () => setProcessing(false) },
-      theme: { color: "#f97316" },
-    });
-    rzp.open();
+      theme: { color: "#ff2e63" },
+    }, (msg) => { setMessage(msg); setProcessing(false); });
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Could not open payment");
+      setProcessing(false);
+    }
   }
 
   if (!balance) return <p className="text-base-500 text-sm">Loading...</p>;
 
   return (
     <div>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <h1 className="text-2xl font-bold mb-1">Conversion credits</h1>
       <p className="text-base-500 text-sm mb-6">Credits are used by document conversion during your current billing period.</p>
 

@@ -21,6 +21,10 @@ const config: Config = {
           500: "var(--c-accent-500)",
           600: "var(--c-accent-600)",
         },
+        yellow: "var(--c-yellow)",
+        orange: "var(--c-orange)",
+        violet: "var(--c-violet)",
+        dark: "var(--c-dark)",
         success: "var(--c-success)",
         warning: "var(--c-warning)",
         danger: "var(--c-danger)",
@@ -33,9 +37,11 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-inter)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 0 0 1px rgba(249,115,22,0.15), 0 8px 24px -8px rgba(249,115,22,0.35)",
+        glow: "0 0 0 1px rgba(255,46,99,0.18), 0 12px 30px -10px rgba(255,46,99,0.4)",
+        pop: "4px 4px 0 0 var(--c-ink)",
         card: "0 1px 2px rgba(16, 24, 40, 0.04)",
       },
     },

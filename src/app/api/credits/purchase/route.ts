@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentShop } from "@/lib/auth";
-import { getRazorpay } from "@/lib/razorpay";
+import { getRazorpay, gatewayErrorMessage } from "@/lib/razorpay";
 import { getPool } from "@/lib/db";
 
 const PRICE_PER_CREDIT = 1; // INR
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       notes: { shopId: String(shop.shopId), credits: String(qty) },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Payment gateway error";
+    const message = gatewayErrorMessage(err);
     return NextResponse.json({ error: `Could not start payment: ${message}` }, { status: 502 });
   }
 

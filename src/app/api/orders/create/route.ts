@@ -5,7 +5,7 @@ import path from "path";
 import { randomUUID } from "crypto";
 import { getPool } from "@/lib/db";
 import { calculatePrice, type Sided, type ColorMode } from "@/lib/price";
-import { getRazorpay } from "@/lib/razorpay";
+import { getShopGateway, gatewayErrorMessage } from "@/lib/razorpay";
 import { canAcceptNewOrder } from "@/lib/subscription";
 import { consumeCredit } from "@/lib/credits";
 import { sendTemplatedEmail } from "@/lib/mailer";
@@ -165,17 +165,19 @@ export async function POST(req: NextRequest) {
   }
 
   let razorpayOrder;
+  let gatewayKeyId: string;
   try {
-    const razorpay = getRazorpay();
-    razorpayOrder = await razorpay.orders.create({
+    const gateway = await getShopGateway(shop.id);
+    gatewayKeyId = gateway.keyId;
+    razorpayOrder = await gateway.client.orders.create({
       amount: Math.round(price.total * 100), // paise
       currency: "INR",
       receipt: orderNumber,
       notes: { orderId: String(orderId), shopId: String(shop.id) },
     });
   } catch (err) {
-    await pool.query("UPDATE orders SET status = 'print_failed' WHERE id = ?", [orderId]);
-    const message = err instanceof Error ? err.message : "Payment gateway error";
+    await pool.query("UPDATE orders SET status = 'cancelled' WHERE id = ?", [orderId]);
+    const message = gatewayErrorMessage(err);
     return NextResponse.json({ error: `Could not start payment: ${message}` }, { status: 502 });
   }
 
@@ -190,7 +192,7 @@ export async function POST(req: NextRequest) {
     orderNumber,
     amount: price.total,
     razorpayOrderId: razorpayOrder.id,
-    keyId: process.env.RAZORPAY_KEY_ID,
+    keyId: gatewayKeyId,
     paymentMethod: "razorpay",
   });
 }

@@ -227,6 +227,8 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Terms & Conditions"
+      eyebrow="📜 Legal"
+      path="/terms-and-conditions"
       intro={
         <p>
           Please read these Terms carefully. They explain the rules for using PrintMyDoc, what you can expect from us, and

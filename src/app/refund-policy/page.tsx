@@ -161,6 +161,16 @@ export default function RefundPolicyPage() {
   return (
     <LegalPage
       title="Refund & Cancellation Policy"
+      eyebrow="💳 Legal"
+      path="/refund-policy"
+      tagline="Subscriptions · Credits · Customer orders"
+      note={
+        <>
+          You can stop your plan any time — it simply won&apos;t renew, but the period already paid is not refunded. Credits
+          are not refundable. We always refund <b>billing errors</b>: double charges, or money taken without your plan or
+          credits being activated. Refunds for a customer&apos;s print order are handled by the shop they ordered from.
+        </>
+      }
       intro={
         <p>
           We want payments on PrintMyDoc to be fair and clear. This page explains when refunds are available, how to ask

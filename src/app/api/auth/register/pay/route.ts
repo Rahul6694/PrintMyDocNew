@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyPendingRegistration } from "@/lib/pendingRegistration";
-import { getRazorpay } from "@/lib/razorpay";
+import { getRazorpay, gatewayErrorMessage } from "@/lib/razorpay";
 import { PLANS, isPlanId } from "@/lib/plans";
 
 export async function POST(req: NextRequest) {
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
       notes: { email: pending.email, plan },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Payment gateway error";
+    const message = gatewayErrorMessage(err);
     return NextResponse.json({ error: `Could not start payment: ${message}` }, { status: 502 });
   }
 

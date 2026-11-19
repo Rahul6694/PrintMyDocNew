@@ -3,16 +3,10 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Script from "next/script";
 import { Printer, User, Store, Phone, Mail, Lock, Gift, Eye, EyeOff, CheckCircle2, Check } from "lucide-react";
 import { PLANS, type PlanId } from "@/lib/plans";
 import AuthHeader from "@/components/auth/AuthHeader";
-
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
-  }
-}
+import { openRazorpay } from "@/lib/razorpayCheckout";
 
 const PLAN_ORDER: PlanId[] = ["basic", "standard", "premium"];
 
@@ -82,7 +76,7 @@ function RegisterForm() {
         return;
       }
 
-      const rzp = new window.Razorpay({
+      await openRazorpay({
         key: data.keyId,
         amount: Math.round(data.amount * 100),
         currency: "INR",
@@ -109,11 +103,10 @@ function RegisterForm() {
           router.refresh();
         },
         modal: { ondismiss: () => setPayingPlan(null) },
-        theme: { color: "#f97316" },
-      });
-      rzp.open();
-    } catch {
-      setError("Something went wrong. Please try again.");
+        theme: { color: "#ff2e63" },
+      }, (msg) => { setError(msg); setPayingPlan(null); });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setPayingPlan(null);
     }
   }
@@ -121,7 +114,6 @@ function RegisterForm() {
   return (
     <div className="min-h-screen bg-base-950">
       <AuthHeader />
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <main className="px-4 sm:px-6 py-8 sm:py-16">
       <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         <div>

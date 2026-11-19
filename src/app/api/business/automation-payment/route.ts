@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "@/lib/db";
 import { getCurrentShop } from "@/lib/auth";
+import { encryptSecret } from "@/lib/crypto";
 
 const DEFAULTS = {
   push_notifications: 1,
@@ -55,7 +56,7 @@ export async function PUT(req: NextRequest) {
     b.orderSeparator || "none",
     b.acceptOnlinePayments ? 1 : 0,
     b.useOwnRazorpay ? 1 : 0,
-    b.razorpayKeyId || null,
+    b.razorpayKeyId ? String(b.razorpayKeyId).trim() : null,
     b.allowManualPayment ? 1 : 0,
     b.checkoutDisplayName || null,
     b.paymentLogoUrl || null,
@@ -64,7 +65,19 @@ export async function PUT(req: NextRequest) {
     b.minOrderAmount ?? 1,
     b.maxFileSizeMb ?? 25,
   ];
-  const updateParams = b.razorpayKeySecret ? [b.razorpayKeySecret] : [];
+  // Encrypt the merchant's Razorpay secret at rest (falls back to plaintext only
+  // if ENCRYPTION_KEY isn't configured, so saving never silently fails).
+  let storedSecret: string | null = null;
+  if (b.razorpayKeySecret) {
+    const raw = String(b.razorpayKeySecret).trim();
+    try {
+      storedSecret = encryptSecret(raw);
+    } catch {
+      console.warn("[automation-payment] ENCRYPTION_KEY missing — storing Razorpay secret unencrypted");
+      storedSecret = raw;
+    }
+  }
+  const updateParams = storedSecret ? [storedSecret] : [];
 
   await pool.query(
     `INSERT INTO shop_settings

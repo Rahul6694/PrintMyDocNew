@@ -195,6 +195,16 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
+      eyebrow="🔒 Legal"
+      path="/privacy-policy"
+      tagline="Digital Personal Data Protection Act, 2023"
+      note={
+        <>
+          We collect only what is needed to run your shop&apos;s orders and payments. We <b>never sell</b> personal data and
+          use no advertising trackers. Card and UPI details are handled by Razorpay, not stored by us. Merchants can delete
+          uploaded files from their dashboard at any time, and anyone can ask us to access, correct or delete their data.
+        </>
+      }
       intro={
         <p>
           This Privacy Policy explains what information PrintMyDoc collects, why we collect it, and the choices you have.

@@ -2,50 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme: warm "paper" look — cream background, near-black ink, pink CTA with
+   yellow highlights, chunky Plus Jakarta Sans headings. Every page reads these
+   tokens, so the dashboard, order page and landing all share one look. */
 :root {
   color-scheme: light;
 
-  /* Light theme (default) */
-  --c-950: #eef1fb; /* page background */
-  --c-900: #f4f6fc;
+  --c-950: #fffdf8; /* page background (paper) */
+  --c-900: #fff9ec; /* tinted fill / inputs */
   --c-850: #ffffff; /* card background */
-  --c-800: #f3f4fa; /* hover / subtle fill */
-  --c-700: #e4e7f2; /* borders */
-  --c-600: #cfd3e8; /* stronger borders */
-  --c-500: #6b7280; /* muted text */
-  --c-ink: #14151f; /* primary text */
+  --c-800: #faf4e6; /* hover / subtle fill */
+  --c-700: #ece3d2; /* borders */
+  --c-600: #dccfb6; /* stronger borders */
+  --c-500: #6b6870; /* muted text */
+  --c-ink: #111114; /* primary text */
 
-  --c-accent-400: #fb923c;
-  --c-accent-500: #f97316;
-  --c-accent-600: #ea580c;
+  --c-accent-400: #f0245a;
+  --c-accent-500: #ff2e63;
+  --c-accent-600: #e11d55;
 
-  --c-success: #16a34a;
-  --c-warning: #d97706;
+  --c-yellow: #ffd22e;
+  --c-orange: #ff6b35;
+  --c-violet: #7c3aed;
+  --c-dark: #17171b;
+
+  --c-success: #15803d;
+  --c-warning: #c2410c;
   --c-danger: #dc2626;
 
   --c-stat-blue: #3b82f6;
   --c-stat-yellow: #f5b544;
   --c-stat-red: #f0645f;
   --c-stat-green: #22b573;
+
+  --shadow-pink: 0 14px 34px -10px rgba(255, 46, 99, 0.45);
+  --ring: rgba(255, 46, 99, 0.18);
 }
 
 :root.dark {
   color-scheme: dark;
 
-  --c-950: #0a0a0f;
-  --c-900: #0f0f17;
-  --c-850: #14141f;
-  --c-800: #1a1a28;
-  --c-700: #242436;
-  --c-600: #33334a;
-  --c-500: #8b8ba3;
-  --c-ink: #e8e8f0;
+  --c-950: #111013;
+  --c-900: #17161a;
+  --c-850: #1c1b20;
+  --c-800: #232228;
+  --c-700: #2e2c33;
+  --c-600: #3d3a43;
+  --c-500: #a19ca8;
+  --c-ink: #f4f1ea;
 
-  --c-accent-400: #fb923c;
-  --c-accent-500: #f97316;
-  --c-accent-600: #ea580c;
+  --c-accent-400: #ff5c86;
+  --c-accent-500: #ff3d6e;
+  --c-accent-600: #ff2e63;
 
-  --c-success: #2fd67f;
+  --c-yellow: #ffd84d;
+  --c-orange: #ff7d4d;
+  --c-violet: #a78bfa;
+  --c-dark: #0b0b0d;
+
+  --c-success: #34d27c;
   --c-warning: #ffb545;
   --c-danger: #ff5b6a;
 
@@ -53,6 +68,9 @@
   --c-stat-yellow: #d99a3a;
   --c-stat-red: #d9605c;
   --c-stat-green: #2fa869;
+
+  --shadow-pink: 0 14px 34px -10px rgba(255, 61, 110, 0.5);
+  --ring: rgba(255, 61, 110, 0.25);
 }
 
 html,
@@ -66,8 +84,13 @@ body {
 }
 
 ::selection {
-  background-color: var(--c-accent-500);
-  color: white;
+  background-color: var(--c-yellow);
+  color: #111114;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), var(--font-inter), system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 /* In @layer components so Tailwind utilities (e.g. pl-9 on a search input)
@@ -78,22 +101,24 @@ body {
   .card {
     background-color: var(--c-850);
     border: 1px solid var(--c-700);
-    border-radius: 0.875rem;
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    border-radius: 1.125rem;
+    box-shadow: 0 2px 6px rgba(17, 17, 20, 0.04);
   }
 
   .btn-primary {
     background-color: var(--c-accent-500);
     color: white;
-    font-weight: 600;
-    border-radius: 0.625rem;
-    padding: 0.625rem 1.25rem;
-    transition: background-color 0.15s ease;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.65rem 1.35rem;
+    box-shadow: var(--shadow-pink);
+    transition: background-color 0.15s ease, transform 0.15s ease;
     white-space: nowrap;
   }
 
   .btn-primary:hover {
     background-color: var(--c-accent-600);
+    transform: translateY(-1px);
   }
 
   .btn-primary:disabled {
@@ -105,8 +130,9 @@ body {
     background-color: transparent;
     color: var(--c-ink);
     font-weight: 600;
-    border-radius: 0.625rem;
-    padding: 0.625rem 1.25rem;
+    border-radius: 999px;
+    padding: 0.65rem 1.35rem;
+    background-color: var(--c-850);
     border: 1px solid var(--c-700);
     transition: border-color 0.15s ease;
     white-space: nowrap;
@@ -119,7 +145,7 @@ body {
   .input-field {
     background-color: var(--c-900);
     border: 1px solid var(--c-700);
-    border-radius: 0.625rem;
+    border-radius: 0.75rem;
     padding: 0.625rem 0.875rem;
     color: var(--c-ink);
     width: 100%;
@@ -132,7 +158,7 @@ body {
   .input-field:focus {
     outline: none;
     border-color: var(--c-accent-500);
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
   .badge {
@@ -195,4 +221,65 @@ body {
   .toggle-switch[data-on="true"] .knob {
     transform: translateX(1.25rem);
   }
+}
+
+/* Landing-page ambient background: soft warm glows + faint dot grid. */
+.bg-ambient {
+  background:
+    radial-gradient(560px 380px at 88% -60px, rgba(255, 210, 46, 0.18), transparent 65%),
+    radial-gradient(620px 420px at -80px 42%, rgba(255, 46, 99, 0.07), transparent 65%),
+    radial-gradient(rgba(17, 17, 20, 0.05) 1px, transparent 1.4px);
+  background-size: auto, auto, 22px 22px;
+}
+:root.dark .bg-ambient {
+  background:
+    radial-gradient(560px 380px at 88% -60px, rgba(255, 210, 46, 0.08), transparent 65%),
+    radial-gradient(620px 420px at -80px 42%, rgba(255, 46, 99, 0.08), transparent 65%),
+    radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1.4px);
+  background-size: auto, auto, 22px 22px;
+}
+
+/* Yellow marker underline used under key words in headings. */
+.marker {
+  background: linear-gradient(transparent 62%, var(--c-yellow) 62%, var(--c-yellow) 90%, transparent 90%);
+  padding: 0 0.1em;
+}
+:root.dark .marker {
+  background: linear-gradient(transparent 62%, rgba(255, 216, 77, 0.45) 62%, rgba(255, 216, 77, 0.45) 90%, transparent 90%);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--c-accent-500), var(--c-orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes pmd-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes pmd-feed { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(0); } }
+.anim-float { animation: pmd-float 5s ease-in-out infinite; }
+.anim-feed { animation: pmd-feed 2.6s ease-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-float, .anim-feed { animation: none; }
+}
+
+/* ── How-it-works video scenes ── */
+@keyframes v-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes v-in-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@keyframes v-pop { 0% { opacity: 0; transform: scale(0.3); } 70% { opacity: 1; transform: scale(1.12); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes v-fill { from { width: 0; } to { width: 100%; } }
+@keyframes v-scan { 0%, 100% { top: 6%; } 50% { top: 90%; } }
+@keyframes v-print { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes v-dot { 0%, 100% { opacity: 0.25; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+.v-up { animation: v-up 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.v-in-left { animation: v-in-left 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.v-pop { animation: v-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.v-fill { width: 0; animation: v-fill 1.2s ease-out both; }
+.v-scan { animation: v-scan 1.8s ease-in-out infinite; }
+.v-print { animation: v-print 2.2s cubic-bezier(0.3, 0.7, 0.3, 1) both; }
+.v-dot { animation: v-dot 0.9s ease-in-out infinite; }
+.v-paused * { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+  .v-up, .v-in-left, .v-pop, .v-fill, .v-print { animation-duration: 0.01ms; }
+  .v-scan, .v-dot { animation: none; }
 }

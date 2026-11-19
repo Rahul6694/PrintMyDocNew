@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Script from "next/script";
+import { openRazorpay } from "@/lib/razorpayCheckout";
 
 type PlanId = "basic" | "standard" | "premium";
 
@@ -10,12 +10,6 @@ const PLAN_LIST: { id: PlanId; name: string; price: number; features: string[] }
   { id: "standard", name: "Standard", price: 250, features: ["Up to 500 orders / month", "QR + link ordering", "Priority support"] },
   { id: "premium", name: "Premium", price: 500, features: ["Unlimited orders", "QR + link ordering", "Priority support"] },
 ];
-
-declare global {
-  interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
-  }
-}
 
 type Subscription = {
   plan: PlanId;
@@ -58,7 +52,7 @@ export default function BillingPage() {
         return;
       }
 
-      const rzp = new window.Razorpay({
+      await openRazorpay({
         key: data.keyId,
         amount: Math.round(data.amount * 100),
         currency: "INR",
@@ -85,18 +79,16 @@ export default function BillingPage() {
         modal: {
           ondismiss: () => setSubscribing(null),
         },
-        theme: { color: "#f97316" },
-      });
-      rzp.open();
-    } catch {
-      setError("Something went wrong. Please try again.");
+        theme: { color: "#ff2e63" },
+      }, (msg) => { setError(msg); setSubscribing(null); });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSubscribing(null);
     }
   }
 
   return (
     <div>
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <h1 className="text-2xl font-bold mb-2">Billing</h1>
       <p className="text-base-500 text-sm mb-6 max-w-lg">
         Choose a monthly plan. Orders stop being accepted once you hit your plan&apos;s limit until
