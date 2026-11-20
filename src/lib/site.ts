@@ -1,13 +1,13 @@
 // Public contact details shown on the marketing pages, footer and modals.
-// WhatsApp/phone come from env so they can be set without a code change;
-// when unset, the WhatsApp buttons fall back to email only.
+// WhatsApp/phone can be overridden from env without a code change;
+// otherwise they default to the main support number.
 export const SUPPORT_EMAIL = "support@printmydoc.app";
 
 // Digits only, with country code, e.g. "919876543210".
-export const SUPPORT_WHATSAPP = (process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "").replace(/\D/g, "");
+export const SUPPORT_WHATSAPP = (process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP || "918275500437").replace(/\D/g, "");
 
 // Display form, e.g. "+91 98765 43210".
-export const SUPPORT_PHONE = process.env.NEXT_PUBLIC_SUPPORT_PHONE || "";
+export const SUPPORT_PHONE = process.env.NEXT_PUBLIC_SUPPORT_PHONE || "+91 82755 00437";
 
 export const SUPPORT_HOURS = "Call: 10am – 7pm · Message: anytime";
 

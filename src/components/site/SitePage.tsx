@@ -4,6 +4,7 @@ import Footer from "@/components/landing/Footer";
 import { SITE_NAV } from "@/lib/site";
 import { OpenInquiryButton } from "./SiteModals";
 import ThemeToggle from "@/components/ThemeToggle";
+import WhatsAppFloat from "./WhatsAppFloat";
 
 /* Shared layout for the content pages (setup guide, features, about, contact,
    partner and the legal pages): top bar → cover → lead → note → sections. */
@@ -69,6 +70,7 @@ export function SitePage({
       </div>
 
       <Footer />
+      <WhatsAppFloat />
     </main>
   );
 }

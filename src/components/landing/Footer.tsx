@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BrandMark } from "./Nav";
 import { OpenDemoButton, OpenInquiryButton } from "@/components/site/SiteModals";
-import { SUPPORT_EMAIL, SUPPORT_HOURS, SUPPORT_PHONE } from "@/lib/site";
+import { SUPPORT_EMAIL, SUPPORT_HOURS, SUPPORT_PHONE, whatsappLink } from "@/lib/site";
 
 const linkCls = "text-sm text-white/65 hover:text-white transition-colors text-left";
 
@@ -44,6 +44,11 @@ export default function Footer() {
             <a href={`mailto:${SUPPORT_EMAIL}`} className={`${linkCls} break-all`}>📧 {SUPPORT_EMAIL}</a>
             {SUPPORT_PHONE && (
               <a href={`tel:${SUPPORT_PHONE.replace(/\s/g, "")}`} className={linkCls}>📞 {SUPPORT_PHONE}</a>
+            )}
+            {whatsappLink("Hello PrintMyDoc, I have a question.") && (
+              <a href={whatsappLink("Hello PrintMyDoc, I have a question.")!} target="_blank" rel="noopener noreferrer" className={linkCls}>
+                💬 WhatsApp Us
+              </a>
             )}
             <span className="text-xs text-white/45 -mt-1">{SUPPORT_HOURS}</span>
             <OpenInquiryButton className={linkCls}>💼 Business Inquiry</OpenInquiryButton>

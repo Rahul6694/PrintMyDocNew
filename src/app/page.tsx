@@ -10,6 +10,7 @@ import FaqSection from "@/components/landing/FaqSection";
 import ContactSection from "@/components/landing/ContactSection";
 import FinalCta from "@/components/landing/FinalCta";
 import Footer from "@/components/landing/Footer";
+import WhatsAppFloat from "@/components/site/WhatsAppFloat";
 
 export default function HomePage() {
   return (
@@ -26,6 +27,7 @@ export default function HomePage() {
       <ContactSection />
       <FinalCta />
       <Footer />
+      <WhatsAppFloat />
     </main>
   );
 }
