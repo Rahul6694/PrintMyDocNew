@@ -4,6 +4,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { getPool } from "@/lib/db";
 import { verifyAgentRequest } from "@/lib/agentAuth";
+import { toGrayscale } from "@/lib/grayscale";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const agent = await verifyAgentRequest(req);
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
   const pool = getPool();
   const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT pj.is_test, p.name AS printer_name, o.file_name, o.file_path FROM print_jobs pj
+    `SELECT pj.is_test, p.name AS printer_name, o.file_name, o.file_path, o.color_mode FROM print_jobs pj
      LEFT JOIN orders o ON o.id = pj.order_id
      LEFT JOIN printers p ON p.id = pj.printer_id
      WHERE pj.id = ? AND pj.shop_id = ? LIMIT 1`,
@@ -36,7 +37,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: "Invalid file path" }, { status: 400 });
   }
 
-  const buffer = await readFile(filePath);
+  let buffer = await readFile(filePath);
+  // B/W orders: strip colour from the file itself so drivers that ignore the
+  // monochrome job option still print grayscale.
+  if (job.color_mode !== "color") buffer = await toGrayscale(buffer, job.file_name);
   return new NextResponse(buffer, {
     headers: {
       "Content-Type": "application/octet-stream",
