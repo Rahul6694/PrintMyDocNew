@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { openRazorpay } from "@/lib/razorpayCheckout";
+import CouponField, { CouponPrice, type AppliedCouponState } from "@/components/CouponField";
 
 type PlanId = "basic" | "standard" | "premium";
 
@@ -22,6 +23,8 @@ export default function BillingPage() {
   const [loading, setLoading] = useState(true);
   const [subscribing, setSubscribing] = useState<PlanId | null>(null);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [coupon, setCoupon] = useState<AppliedCouponState | null>(null);
 
   async function loadStatus() {
     const res = await fetch("/api/billing/status");
@@ -38,16 +41,25 @@ export default function BillingPage() {
 
   async function handleSubscribe(planId: PlanId) {
     setError("");
+    setNotice("");
     setSubscribing(planId);
+    const couponCode = coupon?.plans[planId]?.ok ? coupon.code : undefined;
     try {
       const res = await fetch("/api/billing/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planId }),
+        body: JSON.stringify({ plan: planId, couponCode }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Could not start subscription");
+        setSubscribing(null);
+        return;
+      }
+      if (data.free) {
+        setCoupon(null);
+        setNotice("Plan activated with your coupon.");
+        await loadStatus();
         setSubscribing(null);
         return;
       }
@@ -70,6 +82,7 @@ export default function BillingPage() {
             body: JSON.stringify({ subscriptionId: data.subscriptionId, ...response }),
           });
           if (verifyRes.ok) {
+            setCoupon(null);
             await loadStatus();
           } else {
             setError("Payment verification failed. Contact support if money was deducted.");
@@ -114,15 +127,19 @@ export default function BillingPage() {
         </div>
       )}
 
+      <div className="max-w-md mb-5">
+        <CouponField applied={coupon} onChange={setCoupon} disabled={subscribing !== null} />
+      </div>
+
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 max-w-3xl">
         {PLAN_LIST.map((plan) => {
           const isCurrent = subscription?.plan === plan.id;
+          const couponResult = coupon?.plans[plan.id];
           return (
             <div key={plan.id} className={`card p-4 sm:p-6 flex flex-col ${isCurrent ? "shadow-glow" : ""}`}>
               <h3 className="font-semibold text-lg">{plan.name}</h3>
               <p className="text-2xl font-bold mt-1 mb-4">
-                ₹{plan.price}
-                <span className="text-sm text-base-500 font-normal"> / month</span>
+                <CouponPrice price={plan.price} result={couponResult} suffix=" / month" />
               </p>
               <ul className="text-sm text-base-500 space-y-1.5 mb-6 flex-1">
                 {plan.features.map((f) => (
@@ -142,6 +159,7 @@ export default function BillingPage() {
       </div>
 
       {error && <p className="text-danger text-sm mt-4">{error}</p>}
+      {notice && <p className="text-success text-sm mt-4">{notice}</p>}
     </div>
   );
 }

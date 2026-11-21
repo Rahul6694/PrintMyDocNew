@@ -1,3 +1,7 @@
+// Credited to the referrer's wallet when a shop they referred activates its
+// first paid plan.
+export const REFERRAL_BONUS = 100;
+
 export type PlanId = "basic" | "standard" | "premium";
 
 export const PLANS: Record<PlanId, { name: string; price: number; orderLimit: number | null; features: string[] }> = {

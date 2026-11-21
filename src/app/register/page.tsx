@@ -7,6 +7,7 @@ import { Printer, User, Store, Phone, Mail, Lock, Gift, Eye, EyeOff, CheckCircle
 import { PLANS, type PlanId } from "@/lib/plans";
 import AuthHeader from "@/components/auth/AuthHeader";
 import { openRazorpay } from "@/lib/razorpayCheckout";
+import CouponField, { CouponPrice, type AppliedCouponState } from "@/components/CouponField";
 
 const PLAN_ORDER: PlanId[] = ["basic", "standard", "premium"];
 
@@ -28,6 +29,7 @@ function RegisterForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [payingPlan, setPayingPlan] = useState<PlanId | null>(null);
+  const [coupon, setCoupon] = useState<AppliedCouponState | null>(null);
 
   async function handleDetailsSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,19 +62,44 @@ function RegisterForm() {
     }
   }
 
+  async function completeRegistration(plan: PlanId, couponCode: string | undefined, payment?: Record<string, string>) {
+    const completeRes = await fetch("/api/auth/register/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: registrationToken, plan, couponCode, ...payment }),
+    });
+    const completeData = await completeRes.json();
+    if (!completeRes.ok) {
+      setError(
+        completeData.error ||
+          (payment ? "Payment succeeded but account creation failed — contact support." : "Could not create your account.")
+      );
+      setPayingPlan(null);
+      return;
+    }
+    router.push("/dashboard");
+    router.refresh();
+  }
+
   async function choosePlan(plan: PlanId) {
     setError("");
     setPayingPlan(plan);
+    // Only send the coupon for plans it actually applies to.
+    const couponCode = coupon?.plans[plan]?.ok ? coupon.code : undefined;
     try {
       const res = await fetch("/api/auth/register/pay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: registrationToken, plan }),
+        body: JSON.stringify({ token: registrationToken, plan, couponCode }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Could not start payment");
         setPayingPlan(null);
+        return;
+      }
+      if (data.free) {
+        await completeRegistration(plan, couponCode);
         return;
       }
 
@@ -88,19 +115,7 @@ function RegisterForm() {
           razorpay_order_id: string;
           razorpay_signature: string;
         }) => {
-          const completeRes = await fetch("/api/auth/register/complete", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: registrationToken, plan, ...response }),
-          });
-          const completeData = await completeRes.json();
-          if (!completeRes.ok) {
-            setError(completeData.error || "Payment succeeded but account creation failed — contact support.");
-            setPayingPlan(null);
-            return;
-          }
-          router.push("/dashboard");
-          router.refresh();
+          await completeRegistration(plan, couponCode, response);
         },
         modal: { ondismiss: () => setPayingPlan(null) },
         theme: { color: "#ff2e63" },
@@ -281,10 +296,16 @@ function RegisterForm() {
               </div>
             </div>
 
+            <div className="mb-4">
+              <CouponField token={registrationToken} applied={coupon} onChange={setCoupon} disabled={payingPlan !== null} />
+            </div>
+
             <div className="space-y-3 mb-4">
               {PLAN_ORDER.map((id) => {
                 const plan = PLANS[id];
                 const isPopular = id === "standard";
+                const couponResult = coupon?.plans[id];
+                const isFree = couponResult?.ok && (couponResult.finalPrice ?? 1) < 1;
                 return (
                   <div
                     key={id}
@@ -298,9 +319,11 @@ function RegisterForm() {
                         {isPopular && <span className="badge bg-accent-500 text-white text-[10px]">Most popular</span>}
                       </div>
                       <p className="text-2xl font-bold">
-                        ₹{plan.price}
-                        <span className="text-xs text-base-500 font-normal"> /month</span>
+                        <CouponPrice price={plan.price} result={couponResult} suffix=" /month" />
                       </p>
+                      {coupon && couponResult && !couponResult.ok && (
+                        <p className="text-xs text-base-500">Coupon not valid for this plan</p>
+                      )}
                       <ul className="mt-1 space-y-0.5">
                         {plan.features.map((f) => (
                           <li key={f} className="text-xs text-base-500 flex items-center gap-1.5">
@@ -314,7 +337,7 @@ function RegisterForm() {
                       disabled={payingPlan !== null}
                       className={isPopular ? "btn-primary shrink-0 text-sm" : "btn-secondary shrink-0 text-sm"}
                     >
-                      {payingPlan === id ? "Processing..." : "Pay & activate"}
+                      {payingPlan === id ? "Processing..." : isFree ? "Activate free" : "Pay & activate"}
                     </button>
                   </div>
                 );
@@ -323,7 +346,7 @@ function RegisterForm() {
 
             {error && <p className="text-danger text-sm mb-2">{error}</p>}
 
-            <button onClick={() => setStep("details")} className="text-sm text-base-500 hover:text-ink">
+            <button onClick={() => { setStep("details"); setCoupon(null); }} className="text-sm text-base-500 hover:text-ink">
               ← Back to edit details
             </button>
           </div>

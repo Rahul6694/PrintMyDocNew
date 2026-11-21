@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SitePage, Lead } from "@/components/site/SitePage";
 import { OpenInquiryButton } from "@/components/site/SiteModals";
+import { REFERRAL_BONUS } from "@/lib/plans";
 
 export const metadata: Metadata = {
   title: "Partner Program — PrintMyDoc",
@@ -24,8 +25,8 @@ export default function PartnerPage() {
           </span>
           <b className="font-display text-lg font-extrabold mb-1">Referral Program</b>
           <p className="text-sm text-base-500 leading-relaxed mb-5">
-            Every shop gets its own referral code in the dashboard. When a new shop signs up with your code, you earn a referral
-            bonus in your wallet — tracked in the Referrals tab and withdrawable from your dashboard.
+            Every shop gets its own referral code in the dashboard. When a new shop signs up with your code, you earn ₹{REFERRAL_BONUS}
+            in your wallet — tracked in the Referrals tab and withdrawable from your dashboard.
           </p>
           <div className="mt-auto flex flex-wrap gap-2">
             <Link href="/dashboard/referrals" className="btn-primary">

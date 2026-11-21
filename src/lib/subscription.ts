@@ -1,6 +1,7 @@
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "./db";
 import { PLANS, type PlanId } from "./plans";
+import { finalizeRedemption } from "./coupons";
 
 // Marks a subscription active and, if this shop was referred, releases the
 // referrer's pending bonus into their wallet. Shared by the post-signup
@@ -19,6 +20,17 @@ export async function activateSubscription(
      WHERE id = ?`,
     [razorpayPaymentId, subscriptionId]
   );
+
+  const [subRows] = await pool.query<RowDataPacket[]>("SELECT razorpay_order_id, price FROM subscriptions WHERE id = ?", [
+    subscriptionId,
+  ]);
+  if (subRows[0]?.razorpay_order_id) {
+    await finalizeRedemption(subRows[0].razorpay_order_id, shopId);
+  }
+
+  // A plan activated for free via a 100% coupon doesn't release the referral
+  // bonus — otherwise free coupons could be farmed into withdrawable cash.
+  if (Number(subRows[0]?.price ?? 0) <= 0) return;
 
   const [pendingEarnings] = await pool.query<RowDataPacket[]>(
     "SELECT id, referrer_shop_id, amount FROM referral_earnings WHERE referred_shop_id = ? AND status = 'pending' LIMIT 1",

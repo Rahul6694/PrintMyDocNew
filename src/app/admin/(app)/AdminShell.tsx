@@ -9,6 +9,7 @@ import AdminLogoutButton from "./AdminLogoutButton";
 const NAV_ITEMS = [
   { href: "/admin/shops", label: "Shops" },
   { href: "/admin/withdrawals", label: "Withdrawal Requests" },
+  { href: "/admin/coupons", label: "Coupon Codes" },
   { href: "/admin/email-templates", label: "Email Templates" },
   { href: "/admin/contact-enquiries", label: "Contact Enquiries" },
 ];

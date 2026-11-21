@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { REFERRAL_BONUS } from "@/lib/plans";
 
 type Wallet = { locked: string; available: string; reserved: string; withdrawn: string; cancelled: string; reversed: string };
 type ReferredShop = { id: number; name: string; created_at: string; amount: string | null; status: string | null };
@@ -69,7 +70,10 @@ export default function ReferralsPage() {
 
       <div className="card p-5 mb-6 max-w-2xl">
         <h3 className="font-semibold mb-1">Your referral code</h3>
-        <p className="text-base-500 text-sm mb-3">Share this link — new merchants who sign up and subscribe earn you ₹50 each.</p>
+        <p className="text-base-500 text-sm mb-3">
+          Share this link — you earn <b className="text-ink">₹{REFERRAL_BONUS}</b> for every new shop that signs up with your
+          code and pays for a plan. It lands in your wallet as available balance, withdrawable once you reach ₹500.
+        </p>
         <div className="flex flex-wrap sm:flex-nowrap gap-2">
           <input readOnly value={referralCode} className="input-field w-full sm:w-32 font-mono" />
           <input readOnly value={referralLink} className="input-field flex-1 min-w-0 text-xs" />

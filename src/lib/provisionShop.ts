@@ -1,6 +1,7 @@
 import type { ResultSetHeader } from "mysql2";
 import { getPool } from "./db";
 import { DEFAULT_CAPABILITIES } from "./capabilities";
+import { REFERRAL_BONUS } from "./plans";
 
 const DEFAULT_PRICING = [
   { paper_size: "A4", color_mode: "bw", sided: "single", price_per_page: 2.0 },
@@ -106,7 +107,6 @@ export async function createShop(params: {
   await provisionNewShop(shopId);
 
   if (referredByShopId) {
-    const REFERRAL_BONUS = 50;
     await pool.query(
       `INSERT INTO referral_earnings (referrer_shop_id, referred_shop_id, amount, status) VALUES (?, ?, ?, 'pending')`,
       [referredByShopId, shopId, REFERRAL_BONUS]

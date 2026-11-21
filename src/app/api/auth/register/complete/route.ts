@@ -7,9 +7,10 @@ import { createShop } from "@/lib/provisionShop";
 import { activateSubscription } from "@/lib/subscription";
 import { isPlanId, PLANS } from "@/lib/plans";
 import { signSession, getSessionCookieName } from "@/lib/auth";
+import { applyCoupon, isFree, getPendingRedemption, recordPendingRedemption, type AppliedCoupon } from "@/lib/coupons";
 
 export async function POST(req: NextRequest) {
-  const { token, plan, razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
+  const { token, plan, couponCode, razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
 
   const pending = verifyPendingRegistration(token);
   if (!pending) {
@@ -18,17 +19,29 @@ export async function POST(req: NextRequest) {
   if (!plan || !isPlanId(plan)) {
     return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
   }
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-    return NextResponse.json({ error: "Missing payment verification fields" }, { status: 400 });
-  }
+  // Free signup (100%-off coupon): no payment, but the coupon is re-validated
+  // here so a client can't skip payment by just claiming it's free.
+  let freeCoupon: AppliedCoupon | null = null;
+  if (!razorpay_order_id && couponCode) {
+    const result = await applyCoupon(couponCode, plan, { email: pending.email });
+    if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
+    if (!isFree(result.coupon.finalPrice)) {
+      return NextResponse.json({ error: "This coupon doesn't cover the full price — payment is required." }, { status: 400 });
+    }
+    freeCoupon = result.coupon;
+  } else {
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return NextResponse.json({ error: "Missing payment verification fields" }, { status: 400 });
+    }
 
-  const secret = process.env.RAZORPAY_KEY_SECRET as string;
-  const expectedSignature = crypto
-    .createHmac("sha256", secret)
-    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-    .digest("hex");
-  if (expectedSignature !== razorpay_signature) {
-    return NextResponse.json({ error: "Invalid payment signature" }, { status: 400 });
+    const secret = process.env.RAZORPAY_KEY_SECRET as string;
+    const expectedSignature = crypto
+      .createHmac("sha256", secret)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
+    if (expectedSignature !== razorpay_signature) {
+      return NextResponse.json({ error: "Invalid payment signature" }, { status: 400 });
+    }
   }
 
   const pool = getPool();
@@ -39,7 +52,11 @@ export async function POST(req: NextRequest) {
   const [existing] = await pool.query<RowDataPacket[]>("SELECT id FROM shops WHERE email = ?", [pending.email]);
   if (existing.length > 0) {
     return NextResponse.json(
-      { error: "An account with this email was created in the meantime. Contact support with your payment ID: " + razorpay_payment_id },
+      {
+        error: razorpay_payment_id
+          ? "An account with this email was created in the meantime. Contact support with your payment ID: " + razorpay_payment_id
+          : "An account with this email already exists.",
+      },
       { status: 409 }
     );
   }
@@ -54,12 +71,24 @@ export async function POST(req: NextRequest) {
     referredByCode: pending.referredByCode,
   });
 
-  const price = PLANS[plan].price;
+  // The price actually charged: the coupon's final price if one was used
+  // (recorded at /pay against this gateway order), else the plan's list price.
+  let orderRef: string = razorpay_order_id;
+  let price: number = PLANS[plan].price;
+  if (freeCoupon) {
+    orderRef = `free-${crypto.randomUUID()}`;
+    price = 0;
+    await recordPendingRedemption(freeCoupon, orderRef, pending.email, shopId);
+  } else {
+    const redemption = await getPendingRedemption(razorpay_order_id);
+    if (redemption && redemption.plan === plan) price = Number(redemption.final_price);
+  }
+
   const [subResult] = await pool.query<ResultSetHeader>(
     `INSERT INTO subscriptions (shop_id, plan, price, razorpay_order_id, status) VALUES (?, ?, ?, ?, 'pending')`,
-    [shopId, plan, price, razorpay_order_id]
+    [shopId, plan, price, orderRef]
   );
-  await activateSubscription(subResult.insertId, shopId, razorpay_payment_id);
+  await activateSubscription(subResult.insertId, shopId, razorpay_payment_id || `coupon:${freeCoupon?.code}`);
 
   const [rows] = await pool.query<RowDataPacket[]>("SELECT slug FROM shops WHERE id = ?", [shopId]);
   const slug = rows[0].slug;
